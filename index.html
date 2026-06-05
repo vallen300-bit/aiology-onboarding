@@ -1,0 +1,2405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TheAilogy — AI Playbook</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%236C5CE7'/%3E%3Cstop offset='100%25' stop-color='%2300B4D8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='48' font-weight='700' fill='white' font-family='system-ui'%3EA%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --bg-dark: #0f1117;
+  --bg-sidebar: #161822;
+  --bg-card: #1c1e2e;
+  --bg-card-hover: #232538;
+  --bg-input: #252738;
+  --border: #2a2d3e;
+  --border-light: #353849;
+  --text-primary: #e8eaf0;
+  --text-secondary: #9ba1b5;
+  --text-muted: #6b7186;
+  --accent: #6C5CE7;
+  --accent-light: #a29bfe;
+  --accent-bg: rgba(108,92,231,0.12);
+  --accent-border: rgba(108,92,231,0.3);
+  --cyan: #00B4D8;
+  --cyan-bg: rgba(0,180,216,0.12);
+  --green: #00C9A7;
+  --green-bg: rgba(0,201,167,0.12);
+  --amber: #F0B429;
+  --amber-bg: rgba(240,180,41,0.12);
+  --red: #EF4444;
+  --red-bg: rgba(239,68,68,0.12);
+  --rose: #F472B6;
+  --rose-bg: rgba(244,114,182,0.12);
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: 0.2s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* ===== LAYOUT ===== */
+.app { display: flex; height: 100vh; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--cyan));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 18px;
+  color: white;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.logo-text span { color: var(--accent-light); }
+
+.sidebar-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* Level Selector */
+.level-selector {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.level-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+}
+
+.level-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.level-btn {
+  flex: 1;
+  padding: 7px 0;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+}
+
+.level-btn:hover { border-color: var(--accent-border); color: var(--text-primary); }
+.level-btn.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent-light); }
+
+/* Domain Navigation */
+.nav-section {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+
+.nav-section::-webkit-scrollbar { width: 4px; }
+.nav-section::-webkit-scrollbar-track { background: transparent; }
+.nav-section::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.nav-group-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 16px 20px 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  border-left: 3px solid transparent;
+  position: relative;
+}
+
+.nav-item:hover { background: rgba(255,255,255,0.03); }
+.nav-item.active {
+  background: var(--accent-bg);
+  border-left-color: var(--accent);
+}
+
+.nav-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.nav-item-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.nav-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item-rhythm {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.nav-item.active .nav-item-name { color: var(--accent-light); }
+
+.nav-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--border);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Foundation Section (Memory — bhavanga) */
+.foundation-section {
+  padding: 8px 0 4px;
+  border-top: 1px solid var(--border);
+}
+
+.foundation-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 8px 20px 6px;
+  opacity: 0.6;
+}
+
+.foundation-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  border-left: 3px solid transparent;
+}
+
+.foundation-item:hover { background: rgba(255,255,255,0.03); }
+.foundation-item.active {
+  background: rgba(108,92,231,0.06);
+  border-left-color: var(--accent);
+}
+
+.foundation-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  background: rgba(108,92,231,0.08);
+}
+
+.foundation-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.foundation-item.active .foundation-name { color: var(--accent-light); }
+
+.foundation-sub {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+/* Memory Page Styles */
+.memory-arch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.memory-layer {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: var(--transition);
+}
+
+.memory-layer:hover {
+  border-color: var(--accent-border);
+}
+
+.memory-layer-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.memory-layer-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.memory-layer-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.memory-layer-file {
+  font-size: 11px;
+  color: var(--accent-light);
+  font-family: 'SF Mono', Consolas, monospace;
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: var(--accent-bg);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.memory-flow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+
+.memory-flow-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.memory-flow-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: 4px 10px;
+  background: var(--accent-bg);
+  border-radius: 6px;
+}
+
+.memory-flow-arrow {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Current Tasks List */
+.tasks-list {
+  margin-bottom: 32px;
+}
+
+.task-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  transition: var(--transition);
+}
+
+.task-row:hover {
+  border-color: var(--border-light);
+  background: var(--bg-card-hover);
+}
+
+.task-priority {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.task-priority.high {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.task-priority.medium {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+
+.task-priority.low {
+  background: rgba(107,113,134,0.15);
+  color: var(--text-muted);
+}
+
+.task-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.task-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.task-meta-item {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.task-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 20px;
+  margin-top: 2px;
+}
+
+.task-file-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 10px 16px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+  text-align: center;
+}
+
+.task-file-note code {
+  color: var(--accent-light);
+  font-family: 'SF Mono', Consolas, monospace;
+  font-size: 11px;
+}
+
+/* Sense Doors Page */
+.sense-doors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.source-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.source-card:hover {
+  border-color: var(--border-light);
+  background: var(--bg-card-hover);
+}
+
+.source-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.source-card-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.source-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.source-card-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.source-card-type {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.source-card-status {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.source-card-status.connected {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.source-card-status.local {
+  background: var(--cyan-bg);
+  color: var(--cyan);
+}
+
+.source-card-status.planned {
+  background: rgba(107,113,134,0.15);
+  color: var(--text-muted);
+}
+
+.source-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.sense-doors-summary {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.sense-summary-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.sense-summary-num {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* Control Panel Page */
+.command-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.command-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  transition: var(--transition);
+  cursor: pointer;
+  position: relative;
+}
+
+.command-card:hover {
+  border-color: var(--accent-border);
+  background: var(--bg-card-hover);
+}
+
+.command-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.command-card-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.command-card-name span {
+  font-size: 18px;
+}
+
+.command-card-status {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.command-card-status.active {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.command-card-status.coming {
+  background: rgba(107,113,134,0.15);
+  color: var(--text-muted);
+}
+
+.command-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.command-card-prompt {
+  font-family: 'SF Mono', Consolas, monospace;
+  font-size: 12px;
+  color: var(--accent-light);
+  background: var(--bg-dark);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.command-card-prompt code {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-copy-btn {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: var(--accent-bg);
+  color: var(--accent-light);
+  border: 1px solid var(--accent-border);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.command-copy-btn:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.command-card-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.command-meta-tag {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+/* ===== MAIN CONTENT ===== */
+.main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 40px 64px;
+}
+
+.main::-webkit-scrollbar { width: 6px; }
+.main::-webkit-scrollbar-track { background: transparent; }
+.main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+
+/* Domain Header */
+.domain-header {
+  margin-bottom: 32px;
+}
+
+.domain-title-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.domain-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.domain-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.domain-description {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 640px;
+  line-height: 1.7;
+}
+
+.domain-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.meta-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.meta-tag .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* ===== PLAYS GRID ===== */
+.plays-section {
+  margin-top: 32px;
+}
+
+.plays-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plays-section-title .count {
+  background: var(--bg-input);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+.plays-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+/* Play Card */
+.play-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.play-card:hover {
+  border-color: var(--border-light);
+  background: var(--bg-card-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.play-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.play-card-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 3px 8px;
+  background: var(--bg-input);
+  border-radius: 6px;
+}
+
+.play-card-level {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.play-card-level.beginner { background: var(--green-bg); color: var(--green); }
+.play-card-level.intermediate { background: var(--amber-bg); color: var(--amber); }
+.play-card-level.advanced { background: var(--accent-bg); color: var(--accent-light); }
+
+.play-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.play-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.play-card-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tool-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--bg-input);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+/* Play Detail (Expanded) */
+.play-detail {
+  display: none;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.play-card.expanded .play-detail { display: block; }
+.play-card.expanded { border-color: var(--accent-border); }
+
+.play-step {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.play-step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  color: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.play-step-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.play-step-text strong { color: var(--text-primary); }
+
+.prompt-box {
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin: 10px 0;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  color: var(--cyan);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  position: relative;
+}
+
+.prompt-box .copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.prompt-box .copy-btn:hover { color: var(--text-primary); border-color: var(--accent); }
+
+.play-tip {
+  background: var(--accent-bg);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 12px 16px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.play-tip strong { color: var(--accent-light); }
+
+/* ===== COMING SOON ===== */
+.coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.coming-soon-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.coming-soon h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.coming-soon p {
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 400px;
+}
+
+/* ===== OVERVIEW PAGE ===== */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.overview-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.overview-card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.overview-card-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.overview-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.overview-card-stat {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.overview-card-rhythm {
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .sidebar { width: 220px; min-width: 220px; }
+  .main { padding: 24px 20px 48px; }
+  .plays-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 700px) {
+  .app { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    max-height: 50vh;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .main { overflow-y: auto; height: 50vh; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">A</div>
+        <div class="logo-text">The<span>Ailogy</span></div>
+      </div>
+      <div class="sidebar-subtitle">AI Playbook for Business</div>
+    </div>
+
+    <div class="level-selector">
+      <div class="level-label">Your Level</div>
+      <div class="level-buttons">
+        <button class="level-btn" data-level="beginner" onclick="setLevel('beginner')">Beginner</button>
+        <button class="level-btn active" data-level="intermediate" onclick="setLevel('intermediate')">Inter.</button>
+        <button class="level-btn" data-level="advanced" onclick="setLevel('advanced')">Advanced</button>
+      </div>
+    </div>
+
+    <nav class="nav-section" id="navSection"></nav>
+
+    <div class="foundation-section" id="foundationSection"></div>
+
+    <div class="sidebar-footer">
+      <div class="status-dot"></div>
+      Brisengroup Edition
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main" id="mainContent"></main>
+</div>
+
+<script>
+// ===== DATA =====
+const DOMAINS = [
+  {
+    id: 'overview',
+    name: 'Overview',
+    icon: '📊',
+    color: 'var(--accent)',
+    colorBg: 'var(--accent-bg)',
+    group: 'home',
+    rhythm: '',
+    description: 'Your AI integration command center. See all domains at a glance.',
+    comingSoon: false
+  },
+  {
+    id: 'morning-briefing',
+    name: 'Morning Briefing',
+    icon: '☀️',
+    color: 'var(--amber)',
+    colorBg: 'var(--amber-bg)',
+    group: 'core',
+    rhythm: 'Daily',
+    description: 'Start each day knowing exactly what needs your attention. AI pulls from your calendar, email, tasks, and meeting transcripts to deliver a focused briefing.',
+    comingSoon: false,
+    tools: ['Calendar', 'Gmail', 'Linear', 'Fireflies'],
+    plays: {
+      beginner: [
+        {
+          title: 'Ask Claude for a daily summary',
+          desc: 'Copy-paste your calendar and key emails into Claude and ask for a prioritized briefing.',
+          steps: [
+            '<strong>Open Claude</strong> in Cowork or chat',
+            '<strong>Paste your calendar</strong> for today (screenshot or text)',
+            '<strong>Ask:</strong> "What should I focus on today? Prioritize by urgency."',
+            '<strong>Review</strong> the briefing and adjust your day'
+          ],
+          prompt: 'Here is my calendar for today and my recent emails. Please give me a morning briefing:\n\n1. What are my key meetings and what should I prepare?\n2. What emails need a response today?\n3. What are the top 3 things I should focus on?\n\n[paste calendar + emails]',
+          tip: 'Start simple. Even a basic copy-paste briefing saves 15 minutes of scanning your inbox and calendar.'
+        },
+        {
+          title: 'Review yesterday\'s meeting notes',
+          desc: 'Ask Claude to summarize action items from your most recent meetings.',
+          steps: [
+            '<strong>Check Fireflies</strong> for recent transcripts',
+            '<strong>Share the transcript</strong> with Claude',
+            '<strong>Ask:</strong> "What action items came out of this meeting? What needs follow-up today?"'
+          ],
+          prompt: 'Here is the transcript from yesterday\'s meeting. Please extract:\n\n1. All action items with owners\n2. Key decisions made\n3. Items that need follow-up today\n4. Any unresolved questions\n\n[paste transcript]',
+          tip: 'Fireflies is already connected to your Cowork setup. You can ask Claude to fetch transcripts directly.'
+        }
+      ],
+      intermediate: [
+        {
+          title: 'Connected morning briefing',
+          desc: 'Use Claude\'s integrations to automatically pull calendar, email, and tasks into one briefing.',
+          steps: [
+            '<strong>Open Cowork</strong> and ask for your briefing',
+            '<strong>Claude pulls</strong> from Calendar, Gmail, and Linear automatically',
+            '<strong>Review</strong> the consolidated briefing',
+            '<strong>Act</strong> on the top priorities directly from the briefing'
+          ],
+          prompt: 'Good morning. Please give me my daily briefing:\n\n1. Check my calendar for today — what meetings do I have and what should I prepare?\n2. Check my Gmail — any urgent emails that need a response?\n3. Check Linear — what tasks are due or overdue?\n4. Summarize the top 3 priorities for today.',
+          tip: 'At this level, you don\'t paste anything. Claude pulls the data itself using your connected integrations.'
+        },
+        {
+          title: 'Pre-meeting preparation',
+          desc: 'Before each meeting, get a briefing with context from previous meetings and relevant documents.',
+          steps: [
+            '<strong>Ask Claude</strong> to prepare you for a specific meeting',
+            '<strong>It searches</strong> Fireflies for previous meetings with the same people',
+            '<strong>It checks</strong> email threads and Linear tasks related to the topic',
+            '<strong>You receive</strong> a one-page briefing with talking points'
+          ],
+          prompt: 'I have a meeting with [name] at [time] about [topic]. Please prepare me:\n\n1. What did we discuss in our last meeting? (check Fireflies)\n2. Any relevant emails or tasks? (check Gmail and Linear)\n3. Suggested talking points and questions\n4. Any decisions I need to make',
+          tip: 'Use the meeting-agenda skill for structured prep. It follows a Problem-Goal-Cause-Solutions format.'
+        }
+      ],
+      advanced: [
+        {
+          title: 'Automated daily briefing shortcut',
+          desc: 'Set up a Cowork shortcut that runs every morning and delivers your briefing automatically.',
+          steps: [
+            '<strong>Create a shortcut</strong> in Cowork that triggers on schedule',
+            '<strong>Configure it</strong> to pull from all your connected tools',
+            '<strong>Set the output</strong> to a Notion page or email to yourself',
+            '<strong>It runs daily</strong> — you just read and act'
+          ],
+          prompt: 'Help me create a morning briefing shortcut that runs every weekday at 7:30 AM. It should:\n\n1. Pull today\'s calendar events\n2. Scan Gmail for urgent items (last 12 hours)\n3. Check Linear for overdue or due-today tasks\n4. Check Fireflies for any meetings from yesterday that need follow-up\n5. Output a structured briefing to my Notion inbox',
+          tip: 'This is the "Daily Autopilot" from your Mission Control concept. Once set up, it runs without you thinking about it.'
+        }
+      ]
+    }
+  },
+  {
+    id: 'finance',
+    name: 'Finance & Compliance',
+    icon: '💰',
+    color: 'var(--green)',
+    colorBg: 'var(--green-bg)',
+    group: 'core',
+    rhythm: 'Monthly',
+    description: 'Bank statement review, final accounts, evidence gathering, financial reporting. AI turns hours of manual reconciliation into minutes.',
+    comingSoon: false,
+    tools: ['Excel', 'Dropbox', 'Vienna Server', 'PDF Tools'],
+    plays: {
+      beginner: [
+        {
+          title: 'Summarize a financial document',
+          desc: 'Upload a bank statement, invoice, or financial report and get a plain-language summary.',
+          steps: [
+            '<strong>Upload</strong> a PDF or Excel file to Claude',
+            '<strong>Ask:</strong> "Summarize this document. What are the key figures?"',
+            '<strong>Review</strong> the summary for accuracy',
+            '<strong>Ask follow-up questions</strong> about specific items'
+          ],
+          prompt: 'Please review this financial document and give me:\n\n1. A one-paragraph summary of what this document is\n2. The key financial figures (totals, balances, dates)\n3. Anything that looks unusual or needs attention\n\n[upload document]',
+          tip: 'Always verify AI-generated financial figures against the source document. AI is great for speed but you must check the numbers.'
+        },
+        {
+          title: 'Compare two invoices or statements',
+          desc: 'Upload two documents and ask Claude to identify differences.',
+          steps: [
+            '<strong>Upload both documents</strong> to Claude',
+            '<strong>Ask:</strong> "Compare these two documents. What are the differences?"',
+            '<strong>Review</strong> the comparison table Claude generates'
+          ],
+          prompt: 'I\'m uploading two documents. Please compare them and create a table showing:\n\n1. Items that appear in both (with any differences in amounts)\n2. Items only in document 1\n3. Items only in document 2\n4. Total difference',
+          tip: 'This is the foundation of reconciliation. Start here before moving to automated reconciliation.'
+        }
+      ],
+      intermediate: [
+        {
+          title: 'Bank statement reconciliation',
+          desc: 'Use Claude to match bank transactions against invoices and flag discrepancies.',
+          steps: [
+            '<strong>Upload</strong> the bank statement and your records (Excel or PDF)',
+            '<strong>Ask Claude</strong> to match transactions and find discrepancies',
+            '<strong>Review</strong> the reconciliation report',
+            '<strong>Export</strong> the results to Excel for your records'
+          ],
+          prompt: 'Please reconcile this bank statement against our records:\n\n1. Match each bank transaction to a corresponding invoice or payment\n2. Flag any unmatched transactions on either side\n3. Note any amount discrepancies\n4. Create a summary showing: total matched, total unmatched, net difference\n\n[upload bank statement + records]',
+          tip: 'The RG7 Hagenauer final account system already does this. Apply the same approach to other projects.'
+        },
+        {
+          title: 'Search Vienna server for evidence',
+          desc: 'Use the brisen-vienna-server skill to find specific invoices, contracts, or payment records.',
+          steps: [
+            '<strong>Describe what you need</strong> — invoice number, date range, vendor name',
+            '<strong>Claude searches</strong> the Administration, Finance, and Project folders',
+            '<strong>Review</strong> the found documents',
+            '<strong>Use them</strong> as evidence for your financial case'
+          ],
+          prompt: 'I need to find evidence for [describe what you need]. Please search the Vienna server files for:\n\n1. Relevant invoices or payment records\n2. Any contracts or agreements related to this\n3. Bank records showing the transactions\n\nLook in the Administration, Finance, and Project folders.',
+          tip: 'The brisen-vienna-server skill knows the exact folder structure. Be specific about what you need — dates and names help narrow the search.'
+        }
+      ],
+      advanced: [
+        {
+          title: 'Automated financial reporting',
+          desc: 'Build Excel reports that pull data, calculate variances, and generate commentary automatically.',
+          steps: [
+            '<strong>Define your report template</strong> — what KPIs, what format, what period',
+            '<strong>Ask Claude</strong> to build the Excel workbook with formulas and formatting',
+            '<strong>Provide source data</strong> and let Claude populate and analyze',
+            '<strong>Review</strong> the generated report with variance commentary'
+          ],
+          prompt: 'Create a monthly financial report for [project/entity] covering [period]. Include:\n\n1. Income statement with budget vs actual\n2. Cash flow summary\n3. Key variance explanations (anything >5% deviation)\n4. Action items for next month\n\nFormat as a professional Excel workbook with charts.',
+          tip: 'Use the xlsx skill for professional Excel output. Combine with the variance-analysis skill for deeper insights.'
+        }
+      ]
+    }
+  },
+  {
+    id: 'project-ops',
+    name: 'Project Operations',
+    icon: '📋',
+    color: 'var(--cyan)',
+    colorBg: 'var(--cyan-bg)',
+    group: 'core',
+    rhythm: 'Weekly',
+    description: 'Track deadlines, manage tasks, update stakeholders. AI keeps your projects moving by connecting Linear, Notion, and your team communications.',
+    comingSoon: false,
+    tools: ['Linear', 'Notion', 'Gmail', 'Dropbox'],
+    plays: {
+      beginner: [
+        {
+          title: 'Get a project status summary',
+          desc: 'Ask Claude to check your Linear issues and give you a status overview.',
+          steps: [
+            '<strong>Ask Claude</strong> to check your Linear tasks',
+            '<strong>Review</strong> the summary of open, overdue, and upcoming items',
+            '<strong>Identify</strong> what needs attention this week'
+          ],
+          prompt: 'Check my Linear issues and give me a project status summary:\n\n1. What tasks are overdue?\n2. What\'s due this week?\n3. What\'s blocked or needs input from me?\n4. Any tasks that have been in progress too long?',
+          tip: 'Linear is already connected to your Cowork setup. Claude can pull your issues directly.'
+        },
+        {
+          title: 'Draft a stakeholder update',
+          desc: 'Turn your project status into a professional update email.',
+          steps: [
+            '<strong>Get the status summary</strong> (previous play)',
+            '<strong>Ask Claude</strong> to draft a stakeholder update email',
+            '<strong>Review and adjust</strong> tone and content',
+            '<strong>Send</strong> via Gmail'
+          ],
+          prompt: 'Based on this project status, draft a professional stakeholder update email. Keep it concise — max 10 sentences. Include:\n\n1. Key accomplishments this week\n2. Upcoming milestones\n3. Risks or blockers\n4. Decisions needed from stakeholders',
+          tip: 'A weekly stakeholder update takes 30 minutes manually. With AI, it takes 5 minutes of review and editing.'
+        }
+      ],
+      intermediate: [
+        {
+          title: 'Weekly project pulse',
+          desc: 'Comprehensive weekly review across all projects with action items.',
+          steps: [
+            '<strong>Ask Claude</strong> to pull data from Linear, Notion, and recent emails',
+            '<strong>Review</strong> the cross-project summary',
+            '<strong>Decide</strong> on priorities and delegate actions',
+            '<strong>Create tasks</strong> in Linear directly from the review'
+          ],
+          prompt: 'Give me a weekly pulse across all my projects:\n\n1. Check Linear for all teams — status of active projects\n2. Check Notion for any updated project documents\n3. Flag any deadlines in the next 7 days\n4. Recommend my top 5 priorities for the week\n\nFormat as a brief executive summary.',
+          tip: 'Combine this with the Morning Briefing for a complete weekly + daily rhythm.'
+        }
+      ],
+      advanced: [
+        {
+          title: 'Parallel project investigation (6 agents)',
+          desc: 'Investigate a project issue from 6 angles simultaneously — legal, financial, timeline, contracts, communications, and risk — all in one shot.',
+          steps: [
+            '<strong>Define the project issue</strong> and 6 investigation angles',
+            '<strong>Specify sources per angle</strong> — Dropbox for contracts, Linear for tasks, Slack for comms, etc.',
+            '<strong>Claude launches 6 parallel agents</strong> — each investigates one angle',
+            '<strong>Receive unified brief</strong> — findings cross-referenced, contradictions flagged, action items listed'
+          ],
+          prompt: 'Investigate [project name / issue] from these 6 angles in parallel. Deliver a consolidated project brief.\n\n1. [Angle 1 — e.g., Contract status: check Dropbox for latest agreements]\n2. [Angle 2 — e.g., Financial exposure: review invoices and payment records]\n3. [Angle 3 — e.g., Timeline: check Linear for overdue tasks and milestones]\n4. [Angle 4 — e.g., Communications: search Slack and Gmail for recent discussions]\n5. [Angle 5 — e.g., Legal risk: review contract clauses and obligations]\n6. [Angle 6 — e.g., Stakeholder positions: check meeting notes in Fireflies]',
+          tip: 'This is your power move for complex project situations — especially disputes, stalled projects, or pre-meeting preparation. Each agent searches independently, so you get 6x the research depth in the same time.'
+        },
+        {
+          title: 'Automated weekly report generation',
+          desc: 'Set up a workflow that generates project reports automatically every Friday.',
+          steps: [
+            '<strong>Create a Cowork shortcut</strong> scheduled for Friday afternoons',
+            '<strong>Configure</strong> it to pull from Linear, Notion, and email',
+            '<strong>Output</strong> a formatted report to Dropbox or Notion',
+            '<strong>Auto-send</strong> summary to stakeholders (with your approval)'
+          ],
+          prompt: 'Help me set up an automated weekly project report that runs every Friday at 3 PM:\n\n1. Pull all Linear updates from this week\n2. Summarize progress by project\n3. Flag risks and overdue items\n4. Generate a professional PDF report\n5. Save to my Dropbox _01_INBOX_FROM_CLAUDE folder',
+          tip: 'Start with manual weekly reviews (intermediate) before automating. You need to know what a good report looks like before you automate it.'
+        }
+      ]
+    }
+  },
+  {
+    id: 'meeting-intel',
+    name: 'Meeting Intelligence',
+    icon: '🎙️',
+    color: 'var(--rose)',
+    colorBg: 'var(--rose-bg)',
+    group: 'core',
+    rhythm: 'Per meeting',
+    description: 'Never lose a meeting insight again. AI prepares you before, captures during, and follows up after every meeting.',
+    comingSoon: false,
+    tools: ['Fireflies', 'Calendar', 'Notion', 'Gmail'],
+    plays: {
+      beginner: [
+        {
+          title: 'Summarize a meeting transcript',
+          desc: 'Upload or pull a Fireflies transcript and get key points, decisions, and action items.',
+          steps: [
+            '<strong>Ask Claude</strong> to fetch your recent Fireflies transcripts',
+            '<strong>Select the meeting</strong> you want summarized',
+            '<strong>Review</strong> the summary with action items and decisions'
+          ],
+          prompt: 'Please check my recent Fireflies transcripts and summarize the latest meeting. Include:\n\n1. Key topics discussed\n2. Decisions made\n3. Action items (with who is responsible)\n4. Any follow-up meetings needed',
+          tip: 'Fireflies is connected to Cowork. Claude can search and retrieve transcripts directly.'
+        }
+      ],
+      intermediate: [
+        {
+          title: 'Pre-meeting context briefing',
+          desc: 'Before a meeting, get a briefing with history from previous meetings with the same people.',
+          steps: [
+            '<strong>Tell Claude</strong> who you\'re meeting and the topic',
+            '<strong>Claude searches</strong> Fireflies for past meetings with those people',
+            '<strong>Claude checks</strong> Gmail for relevant email threads',
+            '<strong>You receive</strong> a context-rich briefing with suggested talking points'
+          ],
+          prompt: 'I\'m meeting with [name(s)] about [topic] in [time]. Please prepare me:\n\n1. Search Fireflies for our previous meetings — what did we discuss?\n2. Check Gmail for recent email exchanges with them\n3. What open items or commitments exist from previous conversations?\n4. Suggested agenda and talking points',
+          tip: 'This play combines the meeting-agenda skill with Fireflies intelligence. Much more powerful than a blank agenda.'
+        },
+        {
+          title: 'Post-meeting follow-up',
+          desc: 'After a meeting, generate follow-up emails and task assignments automatically.',
+          steps: [
+            '<strong>Ask Claude</strong> to review the latest meeting transcript',
+            '<strong>Generate</strong> a follow-up email to attendees',
+            '<strong>Create</strong> Linear tasks for each action item',
+            '<strong>Review and send</strong>'
+          ],
+          prompt: 'The meeting just ended. Please:\n\n1. Get the transcript from Fireflies\n2. Draft a follow-up email to all attendees summarizing decisions and action items\n3. Create Linear tasks for my action items\n4. Flag anything that needs follow-up within 48 hours',
+          tip: 'The combination of transcript + follow-up email + task creation saves 20-30 minutes per meeting.'
+        }
+      ],
+      advanced: [
+        {
+          title: 'Meeting pattern analysis',
+          desc: 'Analyze your meeting patterns over time — recurring topics, unresolved items, time allocation.',
+          steps: [
+            '<strong>Ask Claude</strong> to analyze your last month of Fireflies transcripts',
+            '<strong>Identify</strong> recurring topics that keep coming up (signals of unresolved issues)',
+            '<strong>Track</strong> action items that were assigned but never completed',
+            '<strong>Optimize</strong> your meeting schedule based on insights'
+          ],
+          prompt: 'Analyze my Fireflies transcripts from the past month and tell me:\n\n1. What topics come up repeatedly? (possible systemic issues)\n2. Which action items were assigned but never completed?\n3. Which meetings could be replaced by async updates?\n4. How much time am I spending in meetings vs. working time?',
+          tip: 'This is where Meeting Intelligence becomes strategic — you\'re not just managing meetings, you\'re optimizing how you spend your time.'
+        }
+      ]
+    }
+  },
+  {
+    id: 'research',
+    name: 'Research & Strategy',
+    icon: '🔍',
+    color: 'var(--cyan)',
+    colorBg: 'var(--cyan-bg)',
+    group: 'core',
+    rhythm: 'On demand',
+    description: 'Market analysis, competitive intelligence, due diligence, property research. AI accelerates research from days to hours.',
+    comingSoon: false,
+    tools: ['Web Search', 'Notion', 'Dropbox', 'PDF Tools'],
+    plays: {
+      beginner: [
+        {
+          title: 'Quick market research',
+          desc: 'Ask Claude to research a market, company, or trend and get a structured summary.',
+          steps: [
+            '<strong>Define your question</strong> — what do you need to know?',
+            '<strong>Ask Claude</strong> to search the web and summarize findings',
+            '<strong>Review</strong> the structured analysis',
+            '<strong>Ask follow-up questions</strong> to go deeper'
+          ],
+          prompt: 'Research [topic/company/market] and give me:\n\n1. Overview — what is it, how big is the market?\n2. Key players and their positions\n3. Recent trends and developments (last 6 months)\n4. Risks and opportunities\n5. Sources for the information',
+          tip: 'Claude has web search built in. It will search, read multiple sources, and synthesize the findings for you.'
+        }
+      ],
+      intermediate: [
+        {
+          title: 'Competitive analysis',
+          desc: 'Deep comparison of competitors with positioning, strengths, weaknesses, and strategic implications.',
+          steps: [
+            '<strong>Name 2-3 competitors</strong> you want analyzed',
+            '<strong>Claude researches</strong> each one — website, news, financials, reviews',
+            '<strong>Receive</strong> a structured comparison matrix',
+            '<strong>Discuss</strong> strategic implications'
+          ],
+          prompt: 'Compare these competitors: [list companies]. For each one:\n\n1. What do they offer? Core value proposition\n2. Pricing and business model\n3. Strengths and weaknesses\n4. Recent moves (acquisitions, product launches, partnerships)\n5. How do they compare to us?\n\nPresent as a comparison table plus a strategic summary.',
+          tip: 'For deeper research, combine web search with document analysis — upload their annual reports or marketing materials.'
+        },
+        {
+          title: 'Due diligence package',
+          desc: 'Compile a preliminary due diligence report on a company, property, or investment opportunity.',
+          steps: [
+            '<strong>Define the target</strong> — company name, property, or opportunity',
+            '<strong>Claude researches</strong> public records, news, financials, reputation',
+            '<strong>Receive</strong> a structured due diligence brief',
+            '<strong>Identify</strong> gaps that need further investigation'
+          ],
+          prompt: 'I need a preliminary due diligence brief on [target]. Research and compile:\n\n1. Company/entity overview — history, ownership, key people\n2. Financial health — revenue, profitability, debt (if publicly available)\n3. Reputation — news coverage, legal issues, customer sentiment\n4. Red flags — anything that warrants deeper investigation\n5. Recommended next steps for full due diligence',
+          tip: 'AI due diligence is a starting point, not a replacement for legal and financial advisors. Use it to focus your professional advisors on the right questions.'
+        }
+      ],
+      advanced: [
+        {
+          title: 'Parallel deep research (6 agents)',
+          desc: 'Launch 6 research agents simultaneously — each investigates a different question, then Claude consolidates all findings into one brief.',
+          steps: [
+            '<strong>Define 6 questions</strong> — numbered, one per line',
+            '<strong>Specify sources</strong> — web, Dropbox, Slack, Notion, Gmail, or all',
+            '<strong>Claude launches 6 parallel agents</strong> — each gets its own context window',
+            '<strong>Results consolidated</strong> — unified brief with cross-references and contradictions flagged'
+          ],
+          prompt: 'Research these 6 questions in parallel. Sources: [web / Dropbox / Slack / Notion / all]. Deliver a consolidated brief.\n\n1. [Question 1]\n2. [Question 2]\n3. [Question 3]\n4. [Question 4]\n5. [Question 5]\n6. [Question 6]',
+          tip: 'Each agent runs in its own context window, so this doesn\'t burn through your main chat\'s token limit. You can also do 3, 4, or 5 agents — just adjust the number of questions. Great for due diligence, market entry research, or pre-meeting intelligence gathering.'
+        },
+        {
+          title: 'Strategic scenario modeling',
+          desc: 'Model different strategic scenarios with AI — "what if we do X vs. Y?"',
+          steps: [
+            '<strong>Define the decision</strong> and 2-3 scenarios',
+            '<strong>Claude models</strong> each scenario — implications, risks, timeline, cost',
+            '<strong>Compare</strong> scenarios side by side',
+            '<strong>Stress-test</strong> assumptions with devil\'s advocate prompts'
+          ],
+          prompt: 'I\'m considering these strategic options:\n\nA: [option A]\nB: [option B]\nC: [option C]\n\nFor each option, analyze:\n1. Expected outcome (best case and worst case)\n2. Key risks and how to mitigate them\n3. Timeline and resources needed\n4. Impact on existing operations\n5. Your recommendation and reasoning\n\nThen play devil\'s advocate on your own recommendation.',
+          tip: 'The "devil\'s advocate on your own recommendation" step is critical. It forces the AI to challenge its own thinking, which leads to better strategic advice.'
+        }
+      ]
+    }
+  },
+  {
+    id: 'communications',
+    name: 'Communications',
+    icon: '✉️',
+    color: 'var(--accent)',
+    colorBg: 'var(--accent-bg)',
+    group: 'core',
+    rhythm: 'On demand',
+    description: 'Email drafting, presentations, reports, memos. AI helps you communicate faster and more professionally across languages and formats.',
+    comingSoon: false,
+    tools: ['Gmail', 'PowerPoint', 'Word', 'PDF'],
+    plays: {
+      beginner: [
+        {
+          title: 'Draft a professional email',
+          desc: 'Give Claude the context and recipient, get a polished email draft.',
+          steps: [
+            '<strong>Tell Claude</strong> who you\'re writing to, the topic, and the tone',
+            '<strong>Review</strong> the draft',
+            '<strong>Edit</strong> anything that doesn\'t sound like you',
+            '<strong>Send</strong> via Gmail'
+          ],
+          prompt: 'Draft an email to [recipient/role] about [topic].\n\nContext: [brief background]\nTone: [formal/friendly/direct]\nKey points to include:\n- [point 1]\n- [point 2]\n\nKeep it concise — max [X] sentences.',
+          tip: 'The more context you give, the better the draft. "Write an email to my lawyer about the contract" is too vague. "Write a firm but professional email to Dr. Schmidt at Baker McKenzie requesting an extension on the Hagenauer contract review deadline from Feb 15 to Feb 28" is perfect.'
+        },
+        {
+          title: 'Translate and localize',
+          desc: 'Translate emails or documents between English, German, and French while maintaining professional tone.',
+          steps: [
+            '<strong>Paste or upload</strong> the text to translate',
+            '<strong>Specify</strong> target language and tone (formal/informal)',
+            '<strong>Review</strong> the translation',
+            '<strong>Ask for adjustments</strong> to specific phrases'
+          ],
+          prompt: 'Translate this to [German/French/English]. Maintain a professional business tone. If any phrases don\'t translate well literally, adapt them naturally for a [Austrian/Swiss/French] business audience.\n\n[paste text]',
+          tip: 'Claude handles German, French, and English natively. For Austrian German specifically, mention "Austrian business German" for natural-sounding output.'
+        }
+      ],
+      intermediate: [
+        {
+          title: 'Create a presentation',
+          desc: 'Build a professional PowerPoint from a brief or set of talking points.',
+          steps: [
+            '<strong>Describe</strong> the presentation — audience, purpose, key messages',
+            '<strong>Claude creates</strong> a structured slide deck (.pptx)',
+            '<strong>Review</strong> in PowerPoint and adjust',
+            '<strong>Practice</strong> with Claude\'s suggested talking points'
+          ],
+          prompt: 'Create a PowerPoint presentation for [audience] about [topic].\n\nPurpose: [inform/persuade/update]\nNumber of slides: [X]\nKey messages:\n1. [message 1]\n2. [message 2]\n3. [message 3]\n\nStyle: McKinsey-clean, muted colors, data-driven.',
+          tip: 'Use the pptx skill for professional output. Specify "McKinsey-style" in your prompt for clean, structured slides.'
+        },
+        {
+          title: 'Draft a formal report or memo',
+          desc: 'Generate a structured Word document with proper formatting and professional language.',
+          steps: [
+            '<strong>Outline</strong> the report structure and key points',
+            '<strong>Claude drafts</strong> the full document (.docx)',
+            '<strong>Review</strong> for accuracy and tone',
+            '<strong>Iterate</strong> on specific sections'
+          ],
+          prompt: 'Write a [report/memo/letter] about [topic].\n\nAudience: [who will read this]\nFormat: Professional Word document\nStructure:\n1. [section 1]\n2. [section 2]\n3. [section 3]\n\nLength: [X pages]\nTone: [formal/analytical/persuasive]',
+          tip: 'Always ask for an outline first, approve it, then ask for the full draft. This prevents wasted effort on the wrong structure.'
+        }
+      ],
+      advanced: [
+        {
+          title: 'Multi-format communication package',
+          desc: 'Generate a complete communication package — email, presentation, one-pager, and talking points — from a single brief.',
+          steps: [
+            '<strong>Provide one comprehensive brief</strong> about the topic',
+            '<strong>Claude generates</strong> all formats from the same source material',
+            '<strong>Review</strong> each piece for consistency',
+            '<strong>Distribute</strong> to appropriate audiences'
+          ],
+          prompt: 'I need a complete communication package about [topic]. From this single brief, please create:\n\n1. An executive email summary (5 sentences)\n2. A detailed memo (1-2 pages, Word)\n3. A presentation deck (5-7 slides, PowerPoint)\n4. Talking points for my verbal update (bullet points)\n\nBrief: [provide full context]',
+          tip: 'Creating all formats from one brief ensures consistency. No more contradictions between your email and your deck.'
+        }
+      ]
+    }
+  },
+  {
+    id: 'strategic',
+    name: 'Strategic Thinking',
+    icon: '🧭',
+    color: 'var(--accent-light)',
+    colorBg: 'var(--accent-bg)',
+    group: 'core',
+    rhythm: 'As needed',
+    description: 'Investment analysis, scenario modeling, board preparation, long-term planning. AI as your thinking partner for high-stakes decisions.',
+    comingSoon: false,
+    tools: ['Web Search', 'Excel', 'PowerPoint', 'Notion'],
+    plays: {
+      beginner: [
+        {
+          title: 'Structured decision framework',
+          desc: 'Use Claude as a thinking partner to work through a complex decision systematically.',
+          steps: [
+            '<strong>Describe the decision</strong> you\'re facing',
+            '<strong>Claude structures</strong> it into a framework (pros/cons, criteria, options)',
+            '<strong>Work through</strong> each option together',
+            '<strong>Document</strong> the reasoning for your records'
+          ],
+          prompt: 'I need to make a decision about [topic]. Help me think through this systematically:\n\n1. What are my options?\n2. What criteria should I use to evaluate them?\n3. What are the pros and cons of each option?\n4. What information am I missing?\n5. What would you recommend, and why?\n\nThen challenge your own recommendation — what could go wrong?',
+          tip: 'The key phrase is "challenge your own recommendation." This forces Claude to play devil\'s advocate, which is exactly what a good advisor does.'
+        }
+      ],
+      intermediate: [
+        {
+          title: 'Investment analysis',
+          desc: 'Evaluate an investment opportunity with financial modeling and risk assessment.',
+          steps: [
+            '<strong>Describe the opportunity</strong> — asset, price, expected returns',
+            '<strong>Claude builds</strong> a financial model (Excel) with scenarios',
+            '<strong>Stress-test</strong> the assumptions',
+            '<strong>Generate</strong> a recommendation memo'
+          ],
+          prompt: 'Evaluate this investment opportunity:\n\n[describe asset/deal]\n\nPlease:\n1. Build a simple financial model with 3 scenarios (optimistic, base, pessimistic)\n2. Calculate expected IRR and cash-on-cash return for each\n3. Identify the top 5 risks\n4. Compare to alternative uses of capital\n5. Give me your honest assessment — is this worth pursuing?',
+          tip: 'Always ask Claude to identify what it DOESN\'T know. "What assumptions am I making that might be wrong?" is the most valuable question in strategic thinking.'
+        }
+      ],
+      advanced: [
+        {
+          title: 'Board preparation package',
+          desc: 'Prepare for a board meeting with a complete package — agenda, financials, strategic updates, and decision papers.',
+          steps: [
+            '<strong>List the board topics</strong> and decisions needed',
+            '<strong>Claude compiles</strong> data from your financial reports, project updates, and market research',
+            '<strong>Generate</strong> a board pack — agenda, papers, presentation',
+            '<strong>Prepare</strong> talking points and anticipated questions'
+          ],
+          prompt: 'Help me prepare for a board meeting on [date]. Topics:\n\n1. [topic 1 — decision needed: yes/no]\n2. [topic 2]\n3. [topic 3]\n\nFor each topic, prepare:\n- A 1-page briefing paper\n- Key data and evidence\n- Recommendation\n- Anticipated questions and suggested answers\n\nAlso create an agenda and a summary presentation.',
+          tip: 'Board prep is where AI delivers the most value for a Chairman. What used to take a weekend now takes an afternoon.'
+        }
+      ]
+    }
+  },
+  {
+    id: 'hr',
+    name: 'HR & People',
+    icon: '👥',
+    color: 'var(--green)',
+    colorBg: 'var(--green-bg)',
+    group: 'growth',
+    rhythm: 'As needed',
+    description: 'Hiring, onboarding, performance reviews, team development. AI helps you build and manage your team more effectively.',
+    comingSoon: true,
+    tools: ['Gmail', 'Notion', 'Word']
+  },
+  {
+    id: 'marketing',
+    name: 'Marketing & Brand',
+    icon: '📣',
+    color: 'var(--amber)',
+    colorBg: 'var(--amber-bg)',
+    group: 'growth',
+    rhythm: 'As needed',
+    description: 'Brand building, content creation, campaigns, social media. AI accelerates your marketing output while maintaining brand consistency.',
+    comingSoon: true,
+    tools: ['Web Search', 'Notion', 'PowerPoint']
+  },
+  {
+    id: 'clients',
+    name: 'Client Relations',
+    icon: '🤝',
+    color: 'var(--cyan)',
+    colorBg: 'var(--cyan-bg)',
+    group: 'growth',
+    rhythm: 'As needed',
+    description: 'Client communication, reporting, relationship management. AI helps you deliver exceptional service to stakeholders and partners.',
+    comingSoon: true,
+    tools: ['Gmail', 'Notion', 'Word', 'Excel']
+  },
+  {
+    id: 'network',
+    name: 'Network & Relationships',
+    icon: '🌐',
+    color: 'var(--rose)',
+    colorBg: 'var(--rose-bg)',
+    group: 'growth',
+    rhythm: 'Ongoing',
+    description: 'Your personal CRM for high-value contacts. Track relationships, meeting history, follow-ups, and opportunities with the people who matter most.',
+    comingSoon: true,
+    tools: ['Gmail', 'Calendar', 'Fireflies', 'Notion']
+  },
+  {
+    id: 'tasks',
+    name: 'Tasks & Actions',
+    icon: '✅',
+    color: 'var(--green)',
+    colorBg: 'var(--green-bg)',
+    group: 'core',
+    rhythm: 'Daily',
+    description: 'Your master task list and action tracker. Capture commitments from meetings, emails, and decisions. Never let an action item slip through the cracks.',
+    comingSoon: false,
+    tools: ['Linear', 'Notion', 'Gmail', 'Fireflies'],
+    plays: {
+      beginner: [
+        {
+          title: 'Capture tasks from a meeting',
+          desc: 'After any meeting, ask Claude to extract action items and add them to your task list.',
+          steps: [
+            '<strong>Share meeting notes</strong> or Fireflies transcript link',
+            '<strong>Claude extracts</strong> all commitments and action items',
+            '<strong>Review</strong> the extracted tasks — add owners and deadlines',
+            '<strong>Claude adds</strong> them to TASKS.md and Linear'
+          ],
+          prompt: 'I just finished a meeting. Here are the notes:\n\n[paste notes or say "check Fireflies for my last meeting"]\n\nPlease:\n1. Extract every action item, commitment, and follow-up\n2. For each, identify: who owns it, what\'s the deadline, what\'s the priority\n3. Add them to my TASKS.md\n4. Flag anything that seems urgent or time-sensitive',
+          tip: 'The best time to capture tasks is immediately after a meeting. Make this a habit — it takes 30 seconds and saves hours of forgotten follow-ups.'
+        }
+      ],
+      intermediate: [
+        {
+          title: 'Weekly task review',
+          desc: 'Review your entire task list weekly — close completed items, reprioritize, and identify blockers.',
+          steps: [
+            '<strong>Ask Claude</strong> to show your current task list',
+            '<strong>Review together</strong> — what\'s done, what\'s stuck, what changed',
+            '<strong>Reprioritize</strong> based on this week\'s context',
+            '<strong>Identify</strong> the top 3 tasks for the coming week'
+          ],
+          prompt: 'Let\'s do my weekly task review.\n\n1. Show me all open tasks from TASKS.md, grouped by project\n2. For each task, tell me: is it overdue? who\'s the owner? any blockers?\n3. What should my top 3 priorities be this week?\n4. Are there any tasks that have been sitting too long and need attention or should be dropped?\n5. Update the file with any changes we agree on.',
+          tip: 'A weekly review is the single most valuable productivity habit. It turns a chaotic list into a focused plan.'
+        }
+      ],
+      advanced: [
+        {
+          title: 'Automated task pipeline',
+          desc: 'Set up a system where tasks flow in from all your channels automatically — emails, meetings, Slack, calendar.',
+          steps: [
+            '<strong>Define your task sources</strong> — Gmail, Fireflies, Linear, Slack',
+            '<strong>Create a Morning Briefing shortcut</strong> that scans all sources',
+            '<strong>Claude extracts</strong> and categorizes new tasks daily',
+            '<strong>Review and approve</strong> the batch each morning'
+          ],
+          prompt: 'Help me design an automated task capture system:\n\n1. What are all the places where tasks/commitments might appear? (emails, meetings, Slack, Linear, calendar)\n2. For each source, what should the capture trigger be?\n3. Draft a Morning Briefing shortcut that scans these sources daily\n4. How should tasks be categorized and prioritized automatically?\n5. Save the design to TASKS.md as the first task: "Implement the Morning Briefing shortcut"',
+          tip: 'This is where TheAilogy reaches its full potential — AI not just executing your requests, but proactively catching things you might have missed.'
+        }
+      ]
+    }
+  }
+];
+
+// ===== FOUNDATION (Bhavanga — underlying persistent stream) =====
+const FOUNDATION = {
+  id: 'memory',
+  name: 'Memory',
+  icon: '🧠',
+  subtitle: 'Bhavanga',
+  description: 'The persistent knowledge layer that makes Claude your true workplace collaborator. Memory stores context about people, projects, terms, and preferences — so every conversation starts with understanding, not explanation.',
+  layers: [
+    { icon: '⚡', title: 'CLAUDE.md', desc: 'Hot cache — top people, terms, projects, preferences. Read at the start of every session.', file: 'CLAUDE.md' },
+    { icon: '📚', title: 'memory/', desc: 'Deep storage — complete glossary, detailed profiles, project histories, company context.', file: 'memory/' },
+    { icon: '✅', title: 'TASKS.md', desc: 'Master task list — commitments, deadlines, follow-ups. The bridge between memory and action.', file: 'TASKS.md' },
+    { icon: '⚙️', title: 'Shortcuts', desc: 'Scheduled automations — Morning Briefing, weekly reviews. Actions that run without asking.', file: 'Coming soon' }
+  ],
+  flow: ['Sense Doors', 'CLAUDE.md', 'memory/', 'Processing', 'Skills', 'Action'],
+  philosophy: 'In Abhidhamma, bhavanga is the life-continuum — the underlying stream of consciousness that persists between active thought processes. Memory is your AI\'s bhavanga: silent, always present, shaping how every input is understood.'
+};
+
+// ===== SENSE DOORS (Dvāra — input channels) =====
+const SENSE_DOORS = {
+  id: 'sensedoors',
+  name: 'Data Sources',
+  icon: '👁',
+  subtitle: 'Sense Doors',
+  description: 'The input channels (dvāra) through which information flows into your AI system. In Abhidhamma, the five sense doors and mind door are the gates through which consciousness contacts the world. Each connected source below is a sense door — an opening through which raw data becomes actionable intelligence.',
+  sources: [
+    { icon: '📧', name: 'Gmail', type: 'MCP Connector', status: 'connected', desc: 'Read and search emails, extract tasks, identify contacts and commitments.' },
+    { icon: '📅', name: 'Google Calendar', type: 'MCP Connector', status: 'connected', desc: 'View events, find free time, track meeting schedules and attendees.' },
+    { icon: '🎙', name: 'Fireflies', type: 'MCP Connector', status: 'connected', desc: 'Meeting transcripts, AI summaries, action items, speaker identification.' },
+    { icon: '📋', name: 'Linear', type: 'MCP Connector', status: 'connected', desc: 'Project issues, team workflows, sprint cycles, task tracking.' },
+    { icon: '📝', name: 'Notion', type: 'MCP Connector', status: 'connected', desc: 'Pages, databases, documents, knowledge base, team wikis.' },
+    { icon: '💬', name: 'Slack', type: 'MCP Connector', status: 'connected', desc: 'Team messages, channel search, thread reading, workspace communication.' },
+    { icon: '📁', name: 'Dropbox', type: 'Local Filesystem', status: 'local', desc: 'Full file access — read, write, search by name or content, organise. Includes Vienna server folders (Administration, Finance, Project).' },
+    { icon: '🌐', name: 'Chrome Browser', type: 'Browser Automation', status: 'local', desc: 'Web browsing fallback — navigate any site, fill forms, extract data.' },
+    { icon: '📮', name: 'Brisen Email', type: 'Exchange OWA', status: 'local', desc: 'dvallen@brisengroup.com — Exchange server at exchange.evok.ch/owa. Accessed via Chrome browser.' },
+    { icon: '📰', name: 'Feedly', type: 'API Connected', status: 'connected', desc: 'Pro+ API — 8 Market Intelligence feeds: branded residences, UHNWI, luxury hospitality, hotel investment, wellness, heritage properties, European luxury RE, private equity. Token expires Mar 14.' },
+    { icon: '𝕏', name: 'X (Twitter)', type: 'Browser Access', status: 'local', desc: 'Social media intelligence — industry conversations, network updates, market signals. Accessed via Chrome browser at x.com.' },
+    { icon: '🤖', name: 'Grok Heavy', type: 'xAI Subscription', status: 'local', desc: 'SuperGrok Heavy ($300/mo) — Grok 4 Heavy reasoning model with native X/Twitter data access. Real-time market intelligence, DeepSearch, and advanced analysis via grok.com.' },
+    { icon: '📦', name: 'Dropbox API', type: 'Planned', status: 'planned', desc: 'Sharing links, full-text search, activity feed. Waiting for MCP connector.' },
+    { icon: '💬', name: 'WhatsApp', type: 'Browser Access', status: 'local', desc: 'WhatsApp Web (web.whatsapp.com) — read and search conversations, extract key messages. Accessed via Chrome browser. No MCP connector available yet.' },
+    { icon: '📰', name: 'MIO Observer', type: 'Email Feed', status: 'local', desc: 'Daily press clippings for Mandarin Oriental Vienna — print, web, social media, RTV mentions. Delivered to dvallen@brisengroup.com via Exchange OWA. ~1-2 years of archive. Includes article links, unique client counts, and search term tracking.' },
+    { icon: '📌', name: 'ClickUp', type: 'MCP Connector', status: 'connected', desc: 'Project management — tasks, spaces, comments, files, time tracking. Full read/write access: search, create/update tasks, manage comments, attach files. Used for Brisen project and operations management.' },
+    { icon: '✅', name: 'Todoist', type: 'Browser Access', status: 'local', desc: 'Personal task management — daily to-dos, priorities, recurring tasks. Accessed via Chrome browser at todoist.com. No MCP connector available yet.' }
+  ]
+};
+
+// ===== CONTROL PANEL (Manasikāra — directing attention) =====
+const CONTROL_PANEL = {
+  id: 'controlpanel',
+  name: 'Control Panel',
+  icon: '🎛',
+  subtitle: 'Manasikāra',
+  description: 'The command centre for directing your AI system. In Abhidhamma, manasikāra is the mental factor of attention — it directs consciousness toward its object. These commands activate the system\'s capabilities.',
+  commands: [
+    {
+      icon: '🔄', name: 'Consolidate Memory', status: 'active',
+      prompt: 'Consolidate memory',
+      aliases: 'Run Tadālambana · Update memory',
+      desc: 'End-of-session memory update. Scans all sense doors (Gmail, Calendar, Fireflies, Linear, Notion, Slack), identifies new people, projects, and terms, then updates CLAUDE.md and memory/ files.',
+      when: 'End of every work session, or before switching to a new chat',
+      phase: 'Tadālambana (moments 16-17)'
+    },
+    {
+      icon: '📋', name: 'Sync Tasks', status: 'active',
+      prompt: 'Sync tasks to dashboard',
+      aliases: 'Refresh tasks · Update dashboard tasks',
+      desc: 'Reads TASKS.md, parses active tasks, and injects the updated list into the dashboard\'s Current Tasks section.',
+      when: 'After adding or completing tasks in TASKS.md',
+      phase: 'Sampaṭicchana (moment 6)'
+    },
+    {
+      icon: '☀️', name: 'Morning Briefing', status: 'coming',
+      prompt: 'Run Morning Briefing',
+      aliases: 'Start my day · Daily brief',
+      desc: 'Full scan of all sense doors — unread emails, today\'s calendar, recent meeting transcripts, open issues, Slack activity. Produces a prioritised summary with action items.',
+      when: 'Start of each work day',
+      phase: 'Āvajjana (moment 4)'
+    },
+    {
+      icon: '📮', name: 'Check Brisen Email', status: 'active',
+      prompt: 'Check my Brisen email',
+      aliases: 'Check work email · Open Exchange',
+      desc: 'Opens dvallen@brisengroup.com via Exchange OWA (exchange.evok.ch/owa) in Chrome browser. Can read, search, and extract information from your work inbox.',
+      when: 'When you need to check business email through Claude',
+      phase: 'Pañcadvāra (moment 5)'
+    },
+    {
+      icon: '🔍', name: 'Search All Sources', status: 'active',
+      prompt: 'Search across all sources for [topic]',
+      aliases: 'Enterprise search · Find everywhere',
+      desc: 'Searches across all connected sense doors — Gmail, Fireflies, Linear, Notion, Slack, Dropbox files — for a specific topic, person, or keyword.',
+      when: 'When you need to find something but don\'t know which source has it',
+      phase: 'Santīraṇa (moment 7)'
+    },
+    {
+      icon: '📊', name: 'Weekly Review', status: 'coming',
+      prompt: 'Run weekly review',
+      aliases: 'Week in review · Task cleanup',
+      desc: 'Reviews completed tasks, identifies stale items, surfaces forgotten commitments, and proposes task list cleanup.',
+      when: 'End of each week (Friday or Sunday)',
+      phase: 'Voṭṭhabbana (moment 8)'
+    },
+    {
+      icon: '🔑', name: 'Renew Feedly Token', status: 'active',
+      prompt: 'Renew Feedly API token',
+      aliases: 'Refresh Feedly · Feedly expired',
+      desc: 'Feedly developer tokens expire every 30 days. Navigate to feedly.com/v3/auth/dev, complete CAPTCHA, copy new token, and update .skills/skills/feedly-api/config.json.',
+      when: 'Every 30 days — current token expires Mar 14, 2026',
+      phase: 'Dvāra (sense door maintenance)'
+    }
+  ]
+};
+
+// ===== CURRENT TASKS (synced from TASKS.md) =====
+const CURRENT_TASKS = [
+  { num: 1, title: 'Design the Morning Briefing shortcut — define sources, triggers, output format', owner: 'Dimitry + Claude', priority: 'high', due: '—', source: 'TheAilogy dashboard discussion' },
+  { num: 2, title: 'Paste memory preference instructions into Cowork settings', owner: 'Dimitry', priority: 'high', due: 'ASAP', source: 'Memory system setup' },
+  { num: 3, title: 'Familiarize with Linear — understand boards, issues, cycles, views', owner: 'Dimitry', priority: 'medium', due: '—', source: 'Dashboard session' },
+  { num: 4, title: 'Familiarize with Notion — understand pages, databases, views, integrations', owner: 'Dimitry', priority: 'medium', due: '—', source: 'Dashboard session' },
+  { num: 5, title: 'Build out Tasks domain plays with real Brisengroup workflows', owner: 'Dimitry + Claude', priority: 'medium', due: '—', source: 'TheAilogy v2' },
+  { num: 6, title: 'DNS setup for theailogy.ai — configure nameservers and redirects', owner: 'Dimitry', priority: 'low', due: 'When ready', source: 'Domain registration' },
+  { num: 7, title: 'Set up redirect theailogy.com → theailogy.ai', owner: 'Dimitry', priority: 'low', due: 'After DNS', source: 'Domain registration' },
+  { num: 8, title: 'Enrich memory with missing people profiles (MOHG contacts, legal, finance)', owner: 'Claude', priority: 'low', due: 'Ongoing', source: 'Memory system' },
+  { num: 9, title: 'Expand to full Morning Briefing — scan Gmail, Calendar, Fireflies, Linear for new tasks/commitments, add to TASKS.md, then sync dashboard', owner: 'Dimitry + Claude', priority: 'high', due: '—', source: 'Dashboard session' },
+  { num: 10, title: 'Search Vladimir\'s extracted mailbox for List↔Hagenauer instruction emails and Cupial direct correspondence', owner: 'Claude + Dimitry', priority: 'urgent', due: '—', source: 'Cupial position summary 11-Feb' },
+  { num: 11, title: 'Request from Hagenauer: subcontractor work/material reports for all "HAG to provide evidence" items', owner: 'Thomas Leitner / Vladimir', priority: 'urgent', due: '—', source: 'Cupial position summary 11-Feb' },
+  { num: 12, title: 'Locate SW02 negotiation records — meeting minutes, scope lists, exclusion documents', owner: 'Claude + Vladimir', priority: 'high', due: '—', source: 'Cupial position summary 11-Feb' },
+  { num: 13, title: 'Sync Dropbox files from 13_CUPIAL_HANDOVER_MASTER (most are 0-byte placeholders)', owner: 'Dimitry / Dennis', priority: 'high', due: '—', source: 'Cupial session 11-Feb' },
+  { num: 14, title: 'Prepare point-by-point rebuttal document mapping each Investor rejection to evidence', owner: 'Claude + E+H', priority: 'medium', due: '—', source: 'Cupial position summary 11-Feb' }
+];
+
+// ===== STATE =====
+const STORAGE_KEY = 'theailogy-v1';
+
+function loadState() {
+  try { const s = localStorage.getItem(STORAGE_KEY); if (s) return JSON.parse(s); } catch(e) {}
+  return { level: 'intermediate', activeDomain: 'overview', expandedPlays: {} };
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+let state = loadState();
+
+function setLevel(level) {
+  state.level = level;
+  state.expandedPlays = {};
+  saveState();
+  renderAll();
+}
+
+function setDomain(domainId) {
+  state.activeDomain = domainId;
+  state.expandedPlays = {};
+  saveState();
+  renderAll();
+  document.getElementById('mainContent').scrollTop = 0;
+}
+
+function togglePlay(playId) {
+  state.expandedPlays[playId] = !state.expandedPlays[playId];
+  saveState();
+  renderMain();
+}
+
+function copyPrompt(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+  });
+}
+
+// ===== RENDER =====
+function renderAll() {
+  renderNav();
+  renderMain();
+}
+
+function renderNav() {
+  const nav = document.getElementById('navSection');
+  const foundation = document.getElementById('foundationSection');
+  const groups = { home: 'Home', core: 'Core Operations', growth: 'Growth' };
+  let html = '';
+
+  // Level buttons
+  document.querySelectorAll('.level-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.level === state.level);
+  });
+
+  for (const [groupId, groupLabel] of Object.entries(groups)) {
+    const items = DOMAINS.filter(d => d.group === groupId);
+    if (items.length === 0) continue;
+    html += `<div class="nav-group-label">${groupLabel}</div>`;
+    items.forEach(d => {
+      const isActive = d.id === state.activeDomain;
+      html += `
+        <div class="nav-item ${isActive ? 'active' : ''}" onclick="setDomain('${d.id}')">
+          <div class="nav-icon" style="background:${d.colorBg}">${d.icon}</div>
+          <div class="nav-item-text">
+            <div class="nav-item-name">${d.name}</div>
+            ${d.rhythm ? `<div class="nav-item-rhythm">${d.rhythm}</div>` : ''}
+          </div>
+          ${d.comingSoon ? '<span class="nav-badge">Soon</span>' : ''}
+        </div>`;
+    });
+  }
+  nav.innerHTML = html;
+
+  // Foundation section (bhavanga + dvāra + manasikāra)
+  const isMemoryActive = state.activeDomain === 'memory';
+  const isSenseActive = state.activeDomain === 'sensedoors';
+  const isControlActive = state.activeDomain === 'controlpanel';
+  const connectedCount = SENSE_DOORS.sources.filter(s => s.status !== 'planned').length;
+  const activeCommands = CONTROL_PANEL.commands.filter(c => c.status === 'active').length;
+  foundation.innerHTML = `
+    <div class="foundation-label">Foundation</div>
+    <div class="foundation-item ${isMemoryActive ? 'active' : ''}" onclick="setDomain('memory')">
+      <div class="foundation-icon">${FOUNDATION.icon}</div>
+      <div>
+        <div class="foundation-name">${FOUNDATION.name}</div>
+        <div class="foundation-sub">${FOUNDATION.subtitle}</div>
+      </div>
+    </div>
+    <div class="foundation-item ${isSenseActive ? 'active' : ''}" onclick="setDomain('sensedoors')">
+      <div class="foundation-icon">${SENSE_DOORS.icon}</div>
+      <div>
+        <div class="foundation-name">${SENSE_DOORS.name}</div>
+        <div class="foundation-sub">${connectedCount} connected</div>
+      </div>
+    </div>
+    <div class="foundation-item ${isControlActive ? 'active' : ''}" onclick="setDomain('controlpanel')">
+      <div class="foundation-icon">${CONTROL_PANEL.icon}</div>
+      <div>
+        <div class="foundation-name">${CONTROL_PANEL.name}</div>
+        <div class="foundation-sub">${activeCommands} commands</div>
+      </div>
+    </div>`;
+}
+
+function renderMain() {
+  const main = document.getElementById('mainContent');
+
+  // Memory foundation page
+  if (state.activeDomain === 'memory') {
+    renderMemory(main);
+    return;
+  }
+
+  // Sense Doors page
+  if (state.activeDomain === 'sensedoors') {
+    renderSenseDoors(main);
+    return;
+  }
+
+  // Control Panel page
+  if (state.activeDomain === 'controlpanel') {
+    renderControlPanel(main);
+    return;
+  }
+
+  const domain = DOMAINS.find(d => d.id === state.activeDomain);
+  if (!domain) return;
+
+  if (domain.id === 'overview') {
+    renderOverview(main);
+    return;
+  }
+
+  if (domain.comingSoon) {
+    main.innerHTML = `
+      <div class="domain-header">
+        <div class="domain-title-row">
+          <div class="domain-icon" style="background:${domain.colorBg}">${domain.icon}</div>
+          <div class="domain-title">${domain.name}</div>
+        </div>
+        <div class="domain-description">${domain.description}</div>
+        ${domain.tools ? `<div class="domain-meta">${domain.tools.map(t => `<span class="meta-tag">${t}</span>`).join('')}</div>` : ''}
+      </div>
+      <div class="coming-soon">
+        <div class="coming-soon-icon">🚧</div>
+        <h2>Coming Soon</h2>
+        <p>This domain is planned for a future update. The plays and practical guides will be added as Brisengroup's AI integration expands.</p>
+      </div>`;
+    return;
+  }
+
+  const plays = domain.plays[state.level] || [];
+  const allPlaysCount = Object.values(domain.plays).reduce((sum, arr) => sum + arr.length, 0);
+
+  let html = `
+    <div class="domain-header">
+      <div class="domain-title-row">
+        <div class="domain-icon" style="background:${domain.colorBg}">${domain.icon}</div>
+        <div class="domain-title">${domain.name}</div>
+      </div>
+      <div class="domain-description">${domain.description}</div>
+      <div class="domain-meta">
+        <span class="meta-tag"><span class="dot" style="background:${domain.color}"></span> ${domain.rhythm}</span>
+        <span class="meta-tag">${allPlaysCount} plays total</span>
+        ${domain.tools ? domain.tools.map(t => `<span class="meta-tag">${t}</span>`).join('') : ''}
+      </div>
+    </div>
+
+    ${domain.id === 'tasks' ? `
+    <div class="plays-section">
+      <div class="plays-section-title">Current Tasks <span class="count">${CURRENT_TASKS.length}</span></div>
+      <div class="tasks-list">
+        ${CURRENT_TASKS.map(t => `
+          <div class="task-row">
+            <div class="task-num">#${t.num}</div>
+            <div class="task-priority ${t.priority}">${t.priority}</div>
+            <div class="task-content">
+              <div class="task-title">${t.title}</div>
+              <div class="task-meta">
+                <span class="task-meta-item">Owner: ${t.owner}</span>
+                <span class="task-meta-item">Due: ${t.due}</span>
+                <span class="task-meta-item">Source: ${t.source}</span>
+              </div>
+            </div>
+          </div>`).join('')}
+        <div class="task-file-note">These tasks are synced from <code>TASKS.md</code> in your Dropbox. Ask Claude to update them anytime.</div>
+      </div>
+    </div>` : ''}
+
+    <div class="plays-section">
+      <div class="plays-section-title">
+        ${state.level.charAt(0).toUpperCase() + state.level.slice(1)} Plays
+        <span class="count">${plays.length}</span>
+      </div>
+      <div class="plays-grid">`;
+
+  plays.forEach((play, i) => {
+    const playId = `${domain.id}-${state.level}-${i}`;
+    const isExpanded = state.expandedPlays[playId];
+    html += `
+      <div class="play-card ${isExpanded ? 'expanded' : ''}" onclick="togglePlay('${playId}')">
+        <div class="play-card-header">
+          <span class="play-card-num">Play ${i + 1}</span>
+          <span class="play-card-level ${state.level}">${state.level}</span>
+        </div>
+        <div class="play-card-title">${play.title}</div>
+        <div class="play-card-desc">${play.desc}</div>
+        ${play.steps ? `
+          <div class="play-detail">
+            <div class="plays-section-title" style="margin-bottom:12px">Steps</div>
+            ${play.steps.map((s, j) => `
+              <div class="play-step">
+                <div class="play-step-num">${j + 1}</div>
+                <div class="play-step-text">${s}</div>
+              </div>`).join('')}
+            ${play.prompt ? `
+              <div class="plays-section-title" style="margin-top:20px;margin-bottom:8px">Example Prompt</div>
+              <div class="prompt-box" onclick="event.stopPropagation()">
+                <button class="copy-btn" onclick="copyPrompt(this, this.parentElement.dataset.prompt)">Copy</button>
+                ${escapeHtml(play.prompt)}
+              </div>` : ''}
+            ${play.tip ? `
+              <div class="play-tip"><strong>Tip:</strong> ${play.tip}</div>` : ''}
+          </div>` : ''}
+      </div>`;
+  });
+
+  html += `</div></div>`;
+  main.innerHTML = html;
+
+  // Set data-prompt attributes
+  main.querySelectorAll('.prompt-box').forEach(box => {
+    const text = box.textContent.replace('Copy', '').trim();
+    box.dataset.prompt = text;
+  });
+}
+
+function renderOverview(main) {
+  const activeDomains = DOMAINS.filter(d => d.id !== 'overview' && d.id !== 'memory' && !d.comingSoon);
+  const comingSoonDomains = DOMAINS.filter(d => d.comingSoon);
+
+  let totalPlays = 0;
+  activeDomains.forEach(d => {
+    if (d.plays) {
+      const plays = d.plays[state.level] || [];
+      totalPlays += plays.length;
+    }
+  });
+
+  let html = `
+    <div class="domain-header">
+      <div class="domain-title-row">
+        <div class="domain-icon" style="background:var(--accent-bg)">📊</div>
+        <div class="domain-title">AI Playbook Overview</div>
+      </div>
+      <div class="domain-description">
+        Your command center for integrating AI into daily business operations.
+        ${activeDomains.length} active domains with ${totalPlays} plays at ${state.level} level.
+        ${comingSoonDomains.length} more domains coming soon.
+      </div>
+    </div>
+
+    <div class="plays-section">
+      <div class="plays-section-title">Active Domains <span class="count">${activeDomains.length}</span></div>
+      <div class="overview-grid">
+        ${activeDomains.map(d => {
+          const playCount = d.plays ? (d.plays[state.level] || []).length : 0;
+          return `
+            <div class="overview-card" onclick="setDomain('${d.id}')" style="border-top: 3px solid ${d.color}">
+              <div class="overview-card-icon">${d.icon}</div>
+              <div class="overview-card-title">${d.name}</div>
+              <div class="overview-card-stat">${playCount} plays at ${state.level} level</div>
+              <div class="overview-card-rhythm" style="background:${d.colorBg};color:${d.color}">${d.rhythm}</div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="plays-section">
+      <div class="plays-section-title">Coming Soon <span class="count">${comingSoonDomains.length}</span></div>
+      <div class="overview-grid">
+        ${comingSoonDomains.map(d => `
+          <div class="overview-card" style="opacity:0.5;cursor:default;border-top: 3px solid ${d.color}">
+            <div class="overview-card-icon">${d.icon}</div>
+            <div class="overview-card-title">${d.name}</div>
+            <div class="overview-card-stat">Planned</div>
+            <div class="overview-card-rhythm" style="background:${d.colorBg};color:${d.color}">${d.rhythm}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  main.innerHTML = html;
+}
+
+function renderMemory(main) {
+  const f = FOUNDATION;
+  let html = `
+    <div class="domain-header">
+      <div class="domain-title-row">
+        <div class="domain-icon" style="background:var(--accent-bg)">${f.icon}</div>
+        <div class="domain-title">${f.name} <span style="font-size:14px;color:var(--text-muted);font-weight:400;margin-left:8px">${f.subtitle}</span></div>
+      </div>
+      <div class="domain-description">${f.description}</div>
+    </div>
+
+    <div class="plays-section">
+      <div class="plays-section-title">Architecture</div>
+      <div class="memory-arch">
+        ${f.layers.map(l => `
+          <div class="memory-layer">
+            <div class="memory-layer-icon">${l.icon}</div>
+            <div class="memory-layer-title">${l.title}</div>
+            <div class="memory-layer-desc">${l.desc}</div>
+            <div class="memory-layer-file">${l.file}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="plays-section">
+      <div class="plays-section-title">Lookup Flow</div>
+      <div class="memory-flow">
+        ${f.flow.map((step, i) => `
+          <div class="memory-flow-step">
+            <div class="memory-flow-label">${step}</div>
+            ${i < f.flow.length - 1 ? '<div class="memory-flow-arrow">→</div>' : ''}
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="plays-section">
+      <div class="plays-section-title">Philosophy</div>
+      <div class="play-card expanded" style="cursor:default">
+        <div class="play-card-desc" style="font-size:13px;line-height:1.7">${f.philosophy}</div>
+      </div>
+    </div>
+
+    <div class="plays-section">
+      <div class="plays-section-title">Three Persistence Layers</div>
+      <div class="overview-grid">
+        <div class="overview-card" style="border-top: 3px solid var(--accent);cursor:default">
+          <div class="overview-card-icon">🧠</div>
+          <div class="overview-card-title">Memory</div>
+          <div class="overview-card-stat">"What do I know?"</div>
+          <div class="overview-card-rhythm" style="background:var(--accent-bg);color:var(--accent)">CLAUDE.md + memory/</div>
+        </div>
+        <div class="overview-card" onclick="setDomain('tasks')" style="border-top: 3px solid var(--green)">
+          <div class="overview-card-icon">✅</div>
+          <div class="overview-card-title">Tasks</div>
+          <div class="overview-card-stat">"What needs to be done?"</div>
+          <div class="overview-card-rhythm" style="background:var(--green-bg);color:var(--green)">TASKS.md</div>
+        </div>
+        <div class="overview-card" style="border-top: 3px solid var(--amber);cursor:default;opacity:0.6">
+          <div class="overview-card-icon">⚙️</div>
+          <div class="overview-card-title">Shortcuts</div>
+          <div class="overview-card-stat">"What runs automatically?"</div>
+          <div class="overview-card-rhythm" style="background:var(--amber-bg);color:var(--amber)">Coming Soon</div>
+        </div>
+      </div>
+    </div>`;
+
+  main.innerHTML = html;
+}
+
+function renderControlPanel(main) {
+  const cp = CONTROL_PANEL;
+  const activeCount = cp.commands.filter(c => c.status === 'active').length;
+  const comingCount = cp.commands.filter(c => c.status === 'coming').length;
+
+  let html = `
+    <div class="domain-header">
+      <div class="domain-title-row">
+        <div class="domain-icon" style="background:var(--amber-bg)">${cp.icon}</div>
+        <div class="domain-title">${cp.name} <span style="font-size:14px;color:var(--text-muted);font-weight:400;margin-left:8px">${cp.subtitle} · Manasikāra</span></div>
+      </div>
+      <div class="domain-description">${cp.description}</div>
+    </div>
+
+    <div class="sense-doors-summary">
+      <div class="sense-summary-pill"><span class="sense-summary-num" style="color:var(--green)">${activeCount}</span> Active Commands</div>
+      <div class="sense-summary-pill"><span class="sense-summary-num" style="color:var(--text-muted)">${comingCount}</span> Coming Soon</div>
+    </div>
+
+    <div class="plays-section">
+      <div class="plays-section-title">Active Commands <span class="count">${activeCount}</span></div>
+      <div class="command-grid">
+        ${cp.commands.filter(c => c.status === 'active').map(cmd => `
+          <div class="command-card">
+            <div class="command-card-header">
+              <div class="command-card-name"><span>${cmd.icon}</span> ${cmd.name}</div>
+              <div class="command-card-status active">\u25cf Active</div>
+            </div>
+            <div class="command-card-desc">${cmd.desc}</div>
+            <div class="command-card-prompt">
+              <code>${cmd.prompt}</code>
+              <button class="command-copy-btn" onclick="event.stopPropagation();copyPrompt(this,'${cmd.prompt.replace(/'/g, "\\'")}')">Copy</button>
+            </div>
+            <div class="command-card-meta">
+              <div class="command-meta-tag">\u23f0 ${cmd.when}</div>
+            </div>
+            <div class="command-card-meta">
+              <div class="command-meta-tag">\ud83d\udd04 Also: ${cmd.aliases}</div>
+            </div>
+            <div class="command-card-meta">
+              <div class="command-meta-tag">\u2638\ufe0f ${cmd.phase}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="plays-section">
+      <div class="plays-section-title">Coming Soon <span class="count">${comingCount}</span></div>
+      <div class="command-grid">
+        ${cp.commands.filter(c => c.status === 'coming').map(cmd => `
+          <div class="command-card" style="opacity:0.6">
+            <div class="command-card-header">
+              <div class="command-card-name"><span>${cmd.icon}</span> ${cmd.name}</div>
+              <div class="command-card-status coming">Coming Soon</div>
+            </div>
+            <div class="command-card-desc">${cmd.desc}</div>
+            <div class="command-card-prompt" style="opacity:0.5">
+              <code>${cmd.prompt}</code>
+            </div>
+            <div class="command-card-meta">
+              <div class="command-meta-tag">\u23f0 ${cmd.when}</div>
+            </div>
+            <div class="command-card-meta">
+              <div class="command-meta-tag">\u2638\ufe0f ${cmd.phase}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="plays-section">
+      <div class="plays-section-title">Philosophy</div>
+      <div class="play-card expanded" style="cursor:default">
+        <div class="play-card-desc" style="font-size:13px;line-height:1.7">In Abhidhamma, <em>manasik\u0101ra</em> (attention) is one of the seven universal mental factors \u2014 it arises in every moment of consciousness. Without manasik\u0101ra, the mind cannot direct itself toward any object. The Control Panel serves this function: it provides the prompts that direct your AI system\u2019s attention toward specific tasks. Just as manasik\u0101ra turns the mind toward its object, each command here turns the system toward a specific operation.</div>
+      </div>
+    </div>`;
+
+  main.innerHTML = html;
+}
+
+function renderSenseDoors(main) {
+  const s = SENSE_DOORS;
+  const mcpCount = s.sources.filter(x => x.type === 'MCP Connector').length;
+  const localCount = s.sources.filter(x => x.status === 'local').length;
+  const plannedCount = s.sources.filter(x => x.status === 'planned').length;
+
+  let html = `
+    <div class="domain-header">
+      <div class="domain-title-row">
+        <div class="domain-icon" style="background:var(--cyan-bg)">${s.icon}</div>
+        <div class="domain-title">${s.name} <span style="font-size:14px;color:var(--text-muted);font-weight:400;margin-left:8px">${s.subtitle} · Dvāra</span></div>
+      </div>
+      <div class="domain-description">${s.description}</div>
+    </div>
+
+    <div class="sense-doors-summary">
+      <div class="sense-summary-pill"><span class="sense-summary-num" style="color:var(--green)">${mcpCount}</span> MCP Connectors</div>
+      <div class="sense-summary-pill"><span class="sense-summary-num" style="color:var(--cyan)">${localCount}</span> Local Channels</div>
+      <div class="sense-summary-pill"><span class="sense-summary-num" style="color:var(--text-muted)">${plannedCount}</span> Planned</div>
+    </div>
+
+    <div class="plays-section">
+      <div class="plays-section-title">Connected Sources <span class="count">${mcpCount + localCount}</span></div>
+      <div class="sense-doors-grid">
+        ${s.sources.filter(x => x.status !== 'planned').map(src => `
+          <div class="source-card">
+            <div class="source-card-header">
+              <div class="source-card-icon" style="background:${src.status === 'connected' ? 'var(--green-bg)' : 'var(--cyan-bg)'}">${src.icon}</div>
+              <div class="source-card-info">
+                <div class="source-card-name">${src.name}</div>
+                <div class="source-card-type">${src.type}</div>
+              </div>
+              <div class="source-card-status ${src.status}">${src.status === 'connected' ? '● Connected' : '● Local'}</div>
+            </div>
+            <div class="source-card-desc">${src.desc}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="plays-section">
+      <div class="plays-section-title">Planned <span class="count">${plannedCount}</span></div>
+      <div class="sense-doors-grid">
+        ${s.sources.filter(x => x.status === 'planned').map(src => `
+          <div class="source-card" style="opacity:0.6">
+            <div class="source-card-header">
+              <div class="source-card-icon" style="background:rgba(107,113,134,0.1)">${src.icon}</div>
+              <div class="source-card-info">
+                <div class="source-card-name">${src.name}</div>
+                <div class="source-card-type">${src.type}</div>
+              </div>
+              <div class="source-card-status planned">Planned</div>
+            </div>
+            <div class="source-card-desc">${src.desc}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="plays-section">
+      <div class="plays-section-title">Philosophy</div>
+      <div class="play-card expanded" style="cursor:default">
+        <div class="play-card-desc" style="font-size:13px;line-height:1.7">In Abhidhamma, the <em>dvāra</em> (doors) are the channels through which consciousness makes contact with objects. The eye-door receives visual forms, the ear-door receives sounds, the mind-door receives mental objects. Without sense doors, there is no cognition — only dormant bhavanga. Each MCP connector you activate opens a new dvāra, expanding what your AI can perceive and act upon.</div>
+      </div>
+    </div>`;
+
+  main.innerHTML = html;
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ===== INIT =====
+renderAll();
+</script>
+</body>
+</html>
