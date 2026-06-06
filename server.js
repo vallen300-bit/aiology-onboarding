@@ -157,6 +157,12 @@ app.get('/logout', (req, res) => {
 
 app.get('/healthz', (req, res) => res.type('text').send('ok'));
 
+// gated example pages (project-room HTML) — served only after a valid session
+app.use('/rooms', (req, res, next) => {
+  if (!isAuthed(req)) return res.redirect('/login');
+  next();
+}, express.static(path.join(__dirname, 'rooms'), { extensions: ['html'], dotfiles: 'deny', index: false }));
+
 // everything else: gated
 app.get('*', (req, res) => {
   if (!isAuthed(req)) return res.redirect('/login');
