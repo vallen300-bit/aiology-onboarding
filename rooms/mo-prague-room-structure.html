@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MO Prague / CITIC — Project Room Structure (2026-06-06)</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --panel: #141414;
+    --panel-2: #1c1c1c;
+    --border: #2a2a2a;
+    --text: #e8e8e8;
+    --text-dim: #8a8a8a;
+    --text-muted: #5a5a5a;
+    --accent: #c9a96e;        /* muted gold */
+    --accent-dim: #8a7449;
+    --teal: #4a8a8a;          /* muted teal */
+    --rust: #a55a4a;          /* muted rust — empty / blocked */
+    --green: #6a8a5a;         /* muted green — populated / load-bearing */
+    --line: #333;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 300;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 56px 56px 80px;
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+    color: var(--text);
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .meta-bar {
+    display: flex;
+    gap: 32px;
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 14px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+  }
+  .meta-bar strong { color: var(--text-dim); font-weight: 400; }
+  .meta-bar .countdown { color: var(--accent); font-weight: 400; }
+
+  .bottom-line {
+    background: var(--panel);
+    border-left: 2px solid var(--accent);
+    padding: 18px 22px;
+    margin-bottom: 40px;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .bottom-line .label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  /* Parent room wide lane */
+  .parent-lane {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .parent-lane .lane-head {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .parent-lane .lane-title {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .parent-lane .lane-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .parent-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  /* Three-column sibling lane layout */
+  .lanes {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+  .lane {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 24px;
+  }
+  .lane-head {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .lane-title {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .lane-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tree {
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+  .tree .root {
+    color: var(--text);
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+  .tree .branch { color: var(--text-muted); }
+  .tree .folder { color: var(--text-dim); }
+  .tree .file { color: var(--text-muted); }
+  .tree .external { color: var(--accent); }
+  .tree .live { color: var(--green); }
+  .tree .empty { color: var(--rust); }
+  .tree .note {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 11px;
+  }
+
+  /* Output-type matrix */
+  h2 {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text);
+    margin: 0 0 4px;
+    letter-spacing: -0.005em;
+  }
+  .h2-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  table.matrix {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    margin-bottom: 48px;
+  }
+  table.matrix th, table.matrix td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.matrix th {
+    background: var(--panel-2);
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  table.matrix td.row-label {
+    color: var(--text);
+    font-weight: 400;
+    width: 22%;
+  }
+  table.matrix td.row-label small {
+    display: block;
+    color: var(--text-muted);
+    font-weight: 300;
+    margin-top: 2px;
+    font-size: 11px;
+  }
+  table.matrix td.stage {
+    width: 14%;
+    color: var(--text-dim);
+  }
+  table.matrix td.audience {
+    color: var(--text-muted);
+    width: 14%;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .pill.live { background: rgba(106, 138, 90, 0.15); color: var(--green); border: 1px solid var(--green); }
+  .pill.empty { background: rgba(165, 90, 74, 0.10); color: var(--rust); border: 1px solid var(--rust); }
+  .pill.ext { background: rgba(201, 169, 110, 0.10); color: var(--accent); border: 1px solid var(--accent-dim); }
+  .pill.int { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+  .stage-count {
+    display: inline-block;
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-left: 6px;
+  }
+
+  /* Gate flow */
+  .gate-flow {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 28px;
+    margin-bottom: 48px;
+  }
+  .gate-steps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    margin-top: 18px;
+  }
+  .gate-step {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    position: relative;
+  }
+  .gate-step + .gate-step { border-left: none; }
+  .gate-step .stage-num {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .gate-step .stage-name {
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 6px;
+    font-weight: 400;
+  }
+  .gate-step .stage-gate {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+  .gate-step.blocked {
+    background: rgba(165, 90, 74, 0.06);
+    border-color: var(--rust);
+  }
+  .gate-step.blocked .stage-num { color: var(--rust); }
+
+  /* Notes */
+  .notes {
+    background: var(--panel);
+    border-left: 2px solid var(--teal);
+    padding: 18px 22px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .notes .label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 10px;
+  }
+  .notes ul { margin: 0; padding-left: 18px; }
+  .notes li { margin-bottom: 6px; }
+
+  .footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow">Origination Desk · Project Room Architecture</div>
+  <h1>MO Prague / CITIC — Project Room Structure</h1>
+  <div class="subtitle">Single-matter room, built end-to-end via the 7-folder project-room-build SOP.</div>
+  <div class="meta-bar">
+    <span><strong>Slug</strong> &nbsp;mo-prague</span>
+    <span><strong>Phase</strong> &nbsp;Evaluation → Phase B (CITIC letter)</span>
+    <span><strong>Files</strong> &nbsp;85</span>
+    <span><strong>Built</strong> &nbsp;1 Jun 2026 (Session 8)</span>
+    <span class="countdown">Letter v3 staged — awaiting CITIC send</span>
+  </div>
+
+  <div class="bottom-line">
+    <div class="label">Bottom line</div>
+    CITIC owns an underperforming Mandarin Oriental Prague (99 keys, ~&euro;40m headline), offered as a 100% sale or a 49% partnership. Brisen's edge is execution (the Vienna proof), not capital. The real prize is the CITIC relationship. Room carries the full evidence chain from the 22-May meeting transcript through a locked Phase A position to the Phase B proposal letter (currently v3, with Balázs + Edita).
+  </div>
+
+  <div class="parent-lane">
+    <div class="lane-head">The Room</div>
+    <div class="lane-title">wiki/matters/mo-prague/</div>
+    <div class="lane-sub">11 working folders + 5 root-level state files. Source → analysis → position → output, left to right.</div>
+    <div class="tree">
+      <div class="root">mo-prague/</div>
+      <div><span class="branch">├─</span> <span class="folder">00_originals/</span> <span class="live">16 files</span> <span class="note">— 22-May CITIC transcript · business cards · 3 proposal drafts · Dropbox deal-folder (MOHG business case, napkin)</span></div>
+      <div><span class="branch">├─</span> <span class="folder">01_inbox/</span> <span class="empty">empty</span> <span class="note">— intake buffer</span></div>
+      <div><span class="branch">├─</span> <span class="folder">02_inventory/</span> <span class="live">2 files</span> <span class="note">— source inventory + this overview</span></div>
+      <div><span class="branch">├─</span> <span class="folder">03_source_summaries/</span> <span class="live">6 files</span> <span class="note">— meeting analysis · DV↔Edita strategy recap · transcribed appendices</span></div>
+      <div><span class="branch">├─</span> <span class="folder">04_working_brief/</span> <span class="live">28 files</span> <span class="note">— findings F-1..F-13 · memo steps 1–5 · Phase A note · Phase B letter v1→v3 · term sheets</span></div>
+      <div><span class="branch">├─</span> <span class="folder">05_financial_model/</span> <span class="live">10 files</span> <span class="note">— &euro;5m business-case model (formula-driven xlsx + DCF tab + generator)</span></div>
+      <div><span class="branch">├─</span> <span class="folder">05_outputs/</span> <span class="live">6 files</span> <span class="note">— FINAL-EN / FINAL-RU letter (html + pdf)</span></div>
+      <div><span class="branch">├─</span> <span class="folder">99_review/</span> <span class="live">4 files</span> <span class="note">— conflict log · missing-context register</span></div>
+      <div><span class="branch">├─</span> <span class="folder">curated/</span> <span class="live">2 files</span> <span class="note">— 06_decisions_log (D-001..D-011)</span></div>
+      <div><span class="branch">├─</span> <span class="folder">ratified/</span> <span class="live">4 files</span> <span class="note">— Director-ratified letter copies (EN + RU)</span></div>
+      <div><span class="branch">├─</span> <span class="folder">interactions/</span> <span class="live">1 file</span></div>
+      <div><span class="branch">├─</span> <span class="file">gold.md</span> · <span class="file">proposed-gold.md</span> · <span class="file">state.md</span> <span class="note">— curated truth + desk state</span></div>
+      <div><span class="branch">├─</span> <span class="file">_people.md</span> <span class="note">— CITIC cast (Su Guoxin Chairman · Chu Xiao · Wang Qin · Liu Yansong · Cefalù source-channel)</span></div>
+      <div><span class="branch">└─</span> <span class="file">cortex-config.md</span> <span class="note">— matter config</span></div>
+    </div>
+  </div>
+
+  <h2>Output types produced in this room</h2>
+  <div class="h2-sub">What the room manufactures, by build stage and audience.</div>
+  <table class="matrix">
+    <tr><th>Artifact</th><th>Stage</th><th>Audience</th><th>Where</th></tr>
+    <tr><td class="row-label">Framing / Grill Triagas<small>HTML decision-capture</small></td><td class="stage">Memo steps 1 + 3</td><td class="audience">Director</td><td>04_working_brief/</td></tr>
+    <tr><td class="row-label">Block plan<small>Memo skeleton</small></td><td class="stage">Memo step 5</td><td class="audience">Internal</td><td>04_working_brief/</td></tr>
+    <tr><td class="row-label">Phase A internal note<small>Go/no-go decision paper</small></td><td class="stage">Phase A</td><td class="audience">Dimitry · Edita</td><td>04_working_brief/ → emailed</td></tr>
+    <tr><td class="row-label">CITIC proposal letter<small>v1 → v3 (EN + RU)</small></td><td class="stage">Phase B</td><td class="audience">CITIC · AO</td><td>04_working_brief/ → 05_outputs/ → ratified/</td></tr>
+    <tr><td class="row-label">Term sheet<small>v1 (no figures) · v2 (&euro;5m)</small></td><td class="stage">Phase B</td><td class="audience">Internal</td><td>04_working_brief/</td></tr>
+    <tr><td class="row-label">&euro;5m business-case model<small>Formula-driven xlsx + DCF</small></td><td class="stage">Phase B</td><td class="audience">Internal</td><td>05_financial_model/</td></tr>
+  </table>
+
+  <h2>Build phases</h2>
+  <div class="h2-sub">How the room advanced, gate by gate.</div>
+  <div class="gate-strip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:18px;margin-bottom:48px;">
+    <div class="gate-step"><div class="stage-num">01 · BUILD</div><div class="stage-name">Room + sources</div><div class="stage-gate">7-folder SOP; 22-May transcript + cards + drafts ingested. STOP cleared. D-001..D-007.</div></div>
+    <div class="gate-step"><div class="stage-num">02 · PHASE A</div><div class="stage-name">Position locked</div><div class="stage-gate">executive-memo SOP 11-step; D-008 — minority, silent on price, keep Mandarin + renegotiate HMA. Note emailed.</div></div>
+    <div class="gate-step"><div class="stage-num">03 · MODEL</div><div class="stage-name">Business case</div><div class="stage-gate">&euro;5m model re-based on MOHG &euro;12.3m case; D-009 + D-010 ratified. Face IRR 10.4%.</div></div>
+    <div class="gate-step"><div class="stage-num">04 · PHASE B</div><div class="stage-name">CITIC letter</div><div class="stage-gate">v1→v3 (Balázs tracked + Director edits, accepted clean). D-011. With Balázs + Edita — not yet shipped to CITIC.</div></div>
+  </div>
+
+  <div class="notes">
+    <div class="label">Notes for the reader</div>
+    <ul>
+      <li>This is the Origination Desk flagship build — the reference instance of the 7-folder project-room-build SOP.</li>
+      <li>Sister architecture: the NVIDIA room uses the parent-with-siblings variant (one parent + three deal-specific siblings). See <span class="external">nvidia/02_inventory/2026-05-30-nvidia-room-structure-overview.html</span>.</li>
+      <li>Provenance discipline: the MOHG renovation business case reached us via Cefalù → Balázs (MOHG-side) — existence-only, never quoted to CITIC.</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    <span>Origination Desk · Brisen Capital</span>
+    <span>Generated 2026-06-06 · matter mo-prague</span>
+  </div>
+
+</div>
+</body>
+</html>
