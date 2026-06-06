@@ -371,18 +371,11 @@ const SECTIONS=[
   {id:'matters',name:'Brisen Projects',icon:'folder',sub:'Overview of current Brisen projects — cards only, no deep data here.',cards:[
     {t:'AI Hotel (NVIDIA × MO)',ic:'building',b:'Hotel venture near NVIDIA HQ.',detail:{lead:'Brisen × Mandarin Oriental × NVIDIA — an AI-era hotel concept in the NVIDIA HQ vicinity (Santa Clara).',links:[{label:'Santa Clara site-search starter (Baker project room)',url:'/rooms/santa-clara-site-search.html',kind:'baker'},{label:'Mandarin Oriental US footprint overview (Baker project room)',url:'/rooms/mo-us-footprint.html',kind:'baker'},{label:'Brisen × MOHG × NVIDIA shared starting point (Baker project room)',url:'/rooms/brisen-mohg-nvidia-starting-point.html',kind:'baker'}]}},
     {t:'Hagenauer',ic:'building',b:'Construction final account.',detail:{lead:'RG7 Baden bei Wien — permit, final account and defect claims (claims-analysis desk).'}},
-    {t:'Wertheimer LP',ic:'briefcase',b:'Family-office LP.',detail:{lead:'Single-family-office LP fundraise structure.'}},
-    {t:'FX Mayr',ic:'building',b:'Acquisition.',detail:{lead:'Lilienmatt / MRCI partnership context.'}},
-    {t:'ClaimsMax',ic:'shield',b:'Claims-management AI.',detail:{lead:'Brisen-AI product — UBM strategy and pitch.'}},
     {t:'Mandarin Oriental — Sales',ic:'trending-up',b:'Residences sales.',detail:{lead:'Sales & marketing of the MO Residences Vienna.'}},
     {t:'Mandarin Oriental — Asset Mgmt',ic:'building',b:'Hotel operations.',detail:{lead:'Asset management of MO Vienna (Brisen-owned, MOHG-operated).'}},
     {t:'Baden-Baden Projects',ic:'building',b:'BB development.',detail:{lead:'Annaberg (Lilienmatt) and Balgerstrasse (MRCI).'}},
     {t:'Oskolkov-RG7',ic:'users',b:'AO participation.',detail:{lead:'AO 25% equity in RG7 plus Baden-Baden co-invest.'}},
-    {t:'Kitzbühel Alp',ic:'building',b:'Litigation + acquisition.',detail:{lead:'Steininger dispute; Six Senses angle.'}},
-    {t:'Kempinski Kitzbühel',ic:'building',b:'Hotel acquisition.',detail:{lead:'€50–60M acquisition, rebrand to MO.'}},
-    {t:'Financing Vienna & BB',ic:'dollar',b:'Capital raise.',detail:{lead:'Debt/equity financing for operations.'}},
     {t:'Cap Ferrat Villa',ic:'building',b:'Villa rental/sale.',detail:{lead:'Riviera asset — rental or sale.'}},
-    {t:'Hamburg Campus Schlüterstraße',ic:'building',b:'€144M renovation.',detail:{lead:'Hagenauer GU; Peakside / BVK.'}},
     {t:'Brisen-AI',ic:'cpu',b:'AI service platform.',detail:{lead:'ClaimsMax, TenderMax, OwnerView.'}},
     {t:'Tax & Wealth',ic:'dollar',b:'CH/AT/CY/DE + wealth.',detail:{lead:'Russo desks plus the family-wealth overview.'}},
   ]},
@@ -406,7 +399,7 @@ function buildNav(){
   SECTIONS.forEach(s=>{
     const it=el('button','navitem'+(s.id===current?' active':''));it.id='nav-'+s.id;it.type='button';
     it.appendChild(iconEl('ic',s.icon));it.appendChild(el('div',null,s.name));
-    if(s.id==='matters')it.appendChild(el('span','badge','16'));
+    if(s.id==='matters')it.appendChild(el('span','badge','9'));
     if(s.id==='workflows')it.appendChild(el('span','badge','11'));
     it.onclick=()=>show(s.id);nav.appendChild(it);
   });
