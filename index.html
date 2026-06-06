@@ -5,12 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TheAilogy — Baker Onboarding</title>
 <style>
-  /* ===== Tokens: tech-minimal, light. Monochrome + one accent. (design-principles / color-system / typography-scale) ===== */
   :root{
     --bg:#ffffff; --canvas:#fbfbfc; --panel:#ffffff;
-    --ink:#0b0d12; --ink-2:#383d47; --muted:#5b616e;      /* muted AA ~5.6:1 on white */
+    --ink:#0b0d12; --ink-2:#383d47; --muted:#5b616e;
     --line:#e9eaed; --line-2:#f1f2f4; --hover:#f6f7f9;
-    --accent:#1d4ed8; --accent-weak:#eef2fe;              /* used sparingly: links, active, focus */
+    --accent:#1d4ed8; --accent-weak:#eef2fe;
     --black:#0b0d12;
     --t-11:11px; --t-12:12px; --t-13:13px; --t-14:14px; --t-15:15px; --t-19:19px; --t-24:24px; --t-32:32px; --t-40:40px;
     --lh-tight:1.15; --lh:1.55;
@@ -26,7 +25,6 @@
   svg{display:block}
   .app{display:grid;grid-template-columns:252px 1fr;min-height:100vh;}
 
-  /* ===== Sidebar ===== */
   .sidebar{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;
            position:sticky;top:0;height:100vh;overflow-y:auto;}
   .brand{padding:22px 20px 14px;display:flex;align-items:center;gap:11px;}
@@ -59,7 +57,6 @@
   .sb-foot{padding:10px 20px 18px;font-size:var(--t-11);color:var(--muted);display:flex;align-items:center;gap:7px;font-family:var(--mono);}
   .dot{width:6px;height:6px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 3px #16a34a22;}
 
-  /* ===== Main ===== */
   .main{padding:40px 44px 72px;max-width:1040px;}
   .kicker{font-size:var(--t-11);color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.14em;font-family:var(--mono);}
   h1.sec{font-size:var(--t-32);line-height:var(--lh-tight);margin:0 0 8px;letter-spacing:-0.03em;font-weight:650;}
@@ -76,9 +73,8 @@
   .card .open{margin-top:13px;font-size:var(--t-12);color:var(--accent);font-weight:550;font-family:var(--mono);letter-spacing:0;opacity:0;transition:opacity .14s;}
   .card:hover .open{opacity:1;}
 
-  /* ===== Hero (type-led, no imagery) ===== */
-  .hero{border:1px solid var(--line);border-radius:14px;background:
-        linear-gradient(180deg,#fff,var(--canvas));padding:46px 40px 40px;margin-bottom:var(--s4);position:relative;overflow:hidden;}
+  .hero{border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,#fff,var(--canvas));
+        padding:46px 40px 40px;margin-bottom:var(--s4);position:relative;overflow:hidden;}
   .hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--line) 1px,transparent 1px);
         background-size:22px 22px;opacity:.5;mask-image:linear-gradient(120deg,transparent 55%,#000);}
   .hero-in{position:relative;}
@@ -102,7 +98,6 @@
   .ck .n{font-family:var(--mono);font-size:var(--t-12);color:var(--muted);width:18px;}
   .ck.done label{text-decoration:line-through;color:var(--muted);}
 
-  /* ===== Detail modal ===== */
   dialog{border:none;border-radius:14px;padding:0;max-width:620px;width:92%;box-shadow:0 20px 60px rgba(11,13,18,.22);}
   dialog::backdrop{background:rgba(11,13,18,.38);backdrop-filter:saturate(120%) blur(2px);}
   .dlg-head{padding:20px 24px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:13px;}
@@ -126,8 +121,6 @@
   .pill.ok{background:#e7f6ec;color:#15803d;}
   .pill.plan{background:var(--accent-weak);color:var(--accent);}
 
-  .mock-note{position:fixed;bottom:14px;right:16px;background:var(--ink);color:#cfd3da;font-size:var(--t-11);
-             padding:6px 12px;border-radius:8px;font-family:var(--mono);letter-spacing:0;opacity:.9;}
   .hide{display:none!important;}
   @media(max-width:780px){.app{grid-template-columns:1fr}.sidebar{display:none}.main{padding:24px}.hero{padding:32px 24px}.hero h1{font-size:32px}}
 </style>
@@ -147,7 +140,7 @@
     <div id="nav"></div>
     <div class="sb-spacer"></div>
     <div class="director-block">
-      <div class="navlabel" style="padding:4px 12px 6px;">For Dimitry</div>
+      <div class="navlabel" style="padding:4px 12px 6px;">Control Room</div>
       <div id="navDir"></div>
     </div>
     <div class="sb-foot"><span class="dot"></span> Baker live</div>
@@ -169,14 +162,13 @@
   </div>
 </dialog>
 
-
 <script>
-/* ===== Line-icon library (monochrome SVG, built via DOMParser — no innerHTML) ===== */
 const ICONS={
   graduation:'<path d="M2 8 12 3l10 5-10 5z"/><path d="M6 10.2V15c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.8"/>',
   book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
   'book-open':'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
   compass:'<circle cx="12" cy="12" r="10"/><polygon points="16.2 7.8 14.1 14.1 7.8 16.2 9.9 9.9 16.2 7.8"/>',
+  rocket:'<path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2 0-2.8a2 2 0 0 0-3 0z"/><path d="M12 15l-3-3a22 22 0 0 1 8-10c3 0 5 2 5 5a22 22 0 0 1-10 8z"/><path d="M9 12H4s.5-2.8 2-4c1.7-1.3 5 0 5 0"/><path d="M12 15v5s2.8-.5 4-2c1.3-1.7 0-5 0-5"/>',
   terminal:'<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>',
   users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
   grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
@@ -239,6 +231,25 @@ function svgIcon(key){
 const SECTIONS=[
   {id:'landing',name:'Home',icon:'compass',landing:true},
 
+  {id:'beginner',name:'Beginner’s Guide',icon:'rocket',sub:'New to Baker? Start here — the essentials, one step at a time.',cards:[
+    {t:'What is Baker?',ic:'help',b:'The system in one minute.',detail:{lead:'Sentinel senses; Baker reasons and acts. The CEO Cockpit is the dashboard you look at.',list:['Baker reads Gmail, WhatsApp, meetings, ClickUp and RSS automatically.','It extracts deadlines, drafts replies, and remembers decisions.','You query it in plain English — no dashboard navigation needed.','It works in the background as a monitor and an executor.'],links:[{label:'Open the CEO Cockpit',url:'https://baker-master.onrender.com'}]}},
+    {t:'Connect Baker',ic:'plug',b:'Get it running where you work.',detail:{lead:'Baker reaches your tools through the MCP connection. In Claude Desktop and Cowork it is already live — no setup. In Claude Code, add the config snippet once.',list:['Cowork / Claude Desktop — the Baker MCP is already connected.','Once connected, the 14 Baker tables answer your questions live.','It is read-only on the database — safe to ask anything.']}},
+    {t:'Ask your first question',ic:'message',b:'Query in plain English.',detail:{lead:'Type a question; Baker answers from the live database in seconds. No menus, no navigation.',say:['What’s due this week?','Show me the MO Vienna deadline','List VIP contacts','What did Baker do in the last 24 hours?']}},
+    {t:'Run a Scan',ic:'scan',b:'Sweep a matter.',detail:{lead:'Ask Baker to scan a matter and report its current position — it pulls transcripts, emails and the record into one briefing.',say:['Prepare a deep analysis of the [meeting] about [matter]. Include full summary, every commitment, decision and action item with owner, key quotes, and risks.']}},
+    {t:'Store a decision',ic:'archive',b:'Make Baker remember.',detail:{lead:'When you reach a conclusion, tell Baker to store it. It persists across sessions — next time you ask about the matter, Baker already knows.',say:['Store this decision in Baker: [your conclusion]']}},
+    {t:'Which agent do I ask?',ic:'map',b:'Pick the right one.',detail:{lead:'Each agent has a job and a phrase that calls it. The Agent Fleet section lists them all.',list:['Deal questions → Deal Analyst.','People & meeting prep → People Researcher.','Legal → Legal.','Construction claims → Claims Analysis.']}},
+  ]},
+
+  {id:'advanced',name:'Advanced',icon:'sliders',sub:'Power use — get more out of Baker once you’re comfortable.',cards:[
+    {t:'The Baker + Cowork loop',ic:'refresh',b:'The 5-step strategy loop.',detail:{lead:'How a matter moves from a raw meeting to a stored, verified decision.',list:['Ask Baker to prepare a deep brief (Cockpit Scan).','Drill down for more detail in the same session.','Paste the output into Cowork; discuss timing, risk, negotiation.','Tell Cowork to store the decision in Baker.','Verify via Cockpit Scan — ask Baker to confirm the position.']}},
+    {t:'Deep Scan & drill-down',ic:'scan',b:'Go deeper, quote directly.',detail:{lead:'After the first Scan, push Baker for primary evidence — exact quotes, numbers, who said what.',say:['Go deeper on the financial discussion. Quote directly.','Who committed to what, and by when?']}},
+    {t:'Store + verify a position',ic:'archive',b:'Persist, then confirm.',detail:{lead:'Store the conclusion, then ask Baker to read it back so you know the record is right.',say:['Store this decision in Baker: [conclusion]','Confirm Baker’s current position on [matter].']}},
+    {t:'Voice & multi-channel input',ic:'mic',b:'Everything flows into the brain.',detail:{lead:'Voice memos, mail and WhatsApp all flow into the second brain automatically. Baker can even reply as a WhatsApp voice note.',list:['Gmail — read, classified, deadlines extracted.','WhatsApp — threads pulled on demand.','Fireflies / Plaud — transcripts ingested + tagged by matter.']}},
+    {t:'Prompt patterns',ic:'type',b:'Get the best results.',detail:{lead:'The framings that get sharper output — role, stakes, and an explicit job.',say:['Act as a skeptical senior investment analyst with 30 years in luxury hospitality. Find reasons NOT to do the deal.','You are a world-class strategy consultant delivering a $300k analysis of the [INDUSTRY] sector…']}},
+    {t:'Harness V2',ic:'sliders',b:'Give goals, not structure.',detail:{lead:'Hand the AI Head a goal; it translates into owner, scope, gates and a definition of done. You stay strategic.',say:['Run this through Harness V2 and tell me owner, scope, gates, and DONE criteria.']}},
+    {t:'The Cockpit',ic:'monitor',b:'Your live dashboard.',detail:{lead:'Where priorities, travel, critical items and meetings surface at a glance. Open it for the daily glance; use Ask Baker for investigative questions.',links:[{label:'Open the Cockpit',url:'https://baker-master.onrender.com'},{label:'Mobile view',url:'https://baker-master.onrender.com/mobile'}]}},
+  ]},
+
   {id:'aiedu',name:'AI Education',icon:'graduation',sub:'Learn how an agentic AI system is built — and the novel ways to use it.',cards:[
     {t:'AI Architecture 101',ic:'layers',b:'How an agentic system is structured.',detail:{lead:'Baker is built from five building blocks. Understanding them makes every other section click into place.',list:['Model — the reasoning engine (Claude Opus).','Tools (MCP) — hands that reach Gmail, ClickUp, the database.','Memory — what Baker remembers across sessions.','Orchestration — how multiple agents divide work.','Harness — scaffolding that turns a raw model into a reliable worker.'],links:[{label:'Baker Architecture v5 diagram',url:'https://vallen300-bit.github.io/brisen-dashboards/Baker_Architecture_v5.html'}]}},
     {t:'Agent Engineering',ic:'cpu',b:'How agents are designed & prompted.',detail:{lead:'An agent is a scoped AI role with its own instructions, tools and memory. Engineering them well is the difference between a helpful assistant and a reliable system.',list:['Each agent has a system prompt defining its job.','Gates (review steps) catch mistakes before they ship.','Hand-offs pass work between agents on a shared bus.','Golden rule: use AI for judgment, not deterministic plumbing.']}},
@@ -262,21 +273,6 @@ const SECTIONS=[
     {t:'Brief',ic:'file-text',b:'A work order for a builder.',detail:{lead:'The spec an AI Head writes for a code agent: problem, constraints, acceptance criteria. The builder ships against it.'}},
     {t:'Gate',ic:'shield',b:'A quality checkpoint.',detail:{lead:'A review step before shipping — e.g. a Codex second opinion or a security review. Work doesn’t merge until the gate passes.'}},
     {t:'Laconic',ic:'type',b:'The tight reply register.',detail:{lead:'Brisen’s compact format: bottom line first, headers, numbered one-liners, a named next step. Type /laconic to switch any agent into it.'}},
-  ]},
-
-  {id:'start',name:'Start Here',icon:'compass',sub:'Orientation — what Baker is and how to begin.',cards:[
-    {t:'What is Baker / Sentinel',ic:'help',b:'The system in one minute.',detail:{lead:'Sentinel senses; Baker reasons and acts. The CEO Cockpit is the dashboard you look at.',list:['Baker reads Gmail, WhatsApp, meetings, ClickUp and RSS automatically.','It extracts deadlines, drafts replies, and remembers decisions.','You query it in plain English — no dashboard navigation needed.','It is a monitor and an executor, working in the background.'],links:[{label:'Open the CEO Cockpit',url:'https://baker-master.onrender.com'}]}},
-    {t:'The second-brain concept',ic:'database',b:'Why Baker remembers everything.',detail:{lead:'Every matter, decision, deadline and contact lives in one queryable brain. Nothing falls through the cracks because everything is captured and cross-referenced.',list:['Capture is automated: Fireflies + email + manual notes flow in.','Processing analyses items with full context and updates the record.','You ask questions; it answers from the live data.']}},
-    {t:'Getting-Started checklist',ic:'check',b:'Your first 5 steps.',detail:{lead:'See the checklist on the Home page — connect Baker, ask your first question, run a Scan, store a decision, explore the Skills library.'}},
-    {t:'Who’s who',ic:'map',b:'You + the agents.',detail:{lead:'A map of the people and the AI fleet you work with. The Agent Fleet section breaks down each agent and exactly what to say to invoke it.'}},
-  ]},
-
-  {id:'using',name:'Using Baker',icon:'terminal',sub:'Day-to-day operation.',cards:[
-    {t:'The Cockpit',ic:'monitor',b:'Your live dashboard.',detail:{lead:'The CEO Cockpit is where priorities, travel, critical items and meetings surface at a glance. Open it for the daily glance; use Ask Baker for investigative questions.',links:[{label:'Open the Cockpit',url:'https://baker-master.onrender.com'},{label:'Mobile view',url:'https://baker-master.onrender.com/mobile'}]}},
-    {t:'Ask Baker',ic:'message',b:'Query in plain English.',detail:{lead:'Type a question; Baker queries the live database and answers in seconds — no page navigation.',say:['What’s due this week?','Show me the MO Vienna deadline','Which VIP contacts haven’t been emailed in 30 days?','What did Baker do in the last 24 hours?']}},
-    {t:'Scan',ic:'scan',b:'Trigger a matter sweep.',detail:{lead:'Ask Baker to scan a matter and report its current position — it pulls transcripts, emails and the record into one briefing.',say:['Prepare a deep analysis of the [meeting] about [matter]. Include full summary, every commitment, decision and action item with owner, key quotes, and risks.','Go deeper on the financial discussion. Quote directly.']}},
-    {t:'Store a decision',ic:'archive',b:'Log a conclusion.',detail:{lead:'When you reach a conclusion, tell Baker to store it. It persists across sessions — next time you ask about the matter, Baker already knows.',say:['Store this decision in Baker: [your conclusion]']}},
-    {t:'Voice / email / WhatsApp',ic:'mic',b:'Inputs Baker ingests.',detail:{lead:'Voice memos, mail and WhatsApp all flow into the second brain automatically. Baker can also reply as a WhatsApp voice note.',list:['Gmail — read, classified, deadlines extracted.','WhatsApp — threads pulled on demand.','Fireflies / Plaud — meeting transcripts ingested + tagged by matter.']}},
   ]},
 
   {id:'fleet',name:'Agent Fleet',icon:'users',sub:'Who does what — and exactly what to say to call each one.',cards:[
@@ -313,7 +309,6 @@ const SECTIONS=[
     {t:'Formatting output',ic:'type',b:'Ask for a specific format.',detail:{lead:'Tell Baker the exact artifact you want and where to save it.',say:['McKinsey-style comparison matrix as a Word doc, save to Desktop.']}},
     {t:'Creating a ClickUp project',ic:'check',b:'Scaffold a project.',detail:{lead:'Have Baker build a ClickUp project in the BAKER workspace, with phases.',say:['Create a ClickUp project in BAKER workspace for ‘M365 Migration’. Phases: 1) Tenant setup, 2) Mailbox migration, 3) Teams rollout, 4) Training.']}},
     {t:'Fireflies research',ic:'headphones',b:'Mine meeting transcripts.',detail:{lead:'The full meeting-to-decision loop, using the Cockpit Scan and Cowork.',list:['1. Cockpit → Ask Baker: prepare a deep analysis of the [meeting].','2. Same session: “Go deeper on the financials. Quote directly.”','3. Take it to Cowork for strategy discussion.','4. Tell Cowork: “Store this decision in Baker: [conclusion].”']}},
-    {t:'Working with Baker + Cowork',ic:'refresh',b:'The 5-step strategy loop.',detail:{lead:'How a matter moves from raw meeting to a stored decision.',list:['Ask Baker to prepare a deep brief (Cockpit Scan).','Drill down for more detail in the same session.','Paste the output into Cowork; discuss timing, risk, negotiation.','Tell Cowork to store the decision in Baker.','Verify via Cockpit Scan — ask Baker to confirm the position.']}},
     {t:'Saving reports on Render',ic:'globe',b:'Publish a shareable HTML report.',detail:{lead:'Reports can be published to brisen-docs.onrender.com (live in ~60s) and shared by link.',say:['Save this presentation to brisen-docs under [folder name]. Make this shareable.'],links:[{label:'brisen-docs',url:'https://brisen-docs.onrender.com'}]}},
     {t:'Harness-2 commands',ic:'sliders',b:'The build workflow.',detail:{lead:'Harness V2 lets you give goals, not technical structure. The AI Head translates them into owner, scope, gates and DONE criteria.',say:['Run this through Harness V2 and tell me owner, scope, gates, and DONE criteria.']}},
     {t:'Trigger words',ic:'key',b:'Phrases that fire skills.',detail:{lead:'Say the right phrase and the right skill loads automatically. A few examples:',list:['“Light pin” / “pin and archive” — session-close discipline.','“Install [X] Desk on the bus” — wire a new agent into Brisen Lab.','“Consolidate memory” — run the memory handover loop.','“/laconic” — switch to the tight register.']}},
@@ -410,8 +405,8 @@ function renderLanding(main){
   const ctas=el('div','ctas');
   const b1=document.createElement('a');b1.className='btn primary';b1.href='https://baker-master.onrender.com';b1.target='_blank';
   b1.appendChild(el('span',null,'Open Baker Dashboard'));b1.appendChild(iconEl('ic','external'));
-  const b2=document.createElement('a');b2.className='btn ghost';b2.href='#';b2.onclick=(e)=>{e.preventDefault();alert('Mockup: connects to Baker agents / KBL setup');};
-  b2.appendChild(el('span',null,'Connect to Agents + KBL'));b2.appendChild(iconEl('ic','link'));
+  const b2=document.createElement('a');b2.className='btn ghost';b2.href='#';b2.onclick=(e)=>{e.preventDefault();show('beginner');};
+  b2.appendChild(el('span',null,'Start the Beginner’s Guide'));b2.appendChild(iconEl('ic','rocket'));
   ctas.appendChild(b1);ctas.appendChild(b2);hin.appendChild(ctas);hero.appendChild(hin);main.appendChild(hero);
   main.appendChild(el('div','subhead','New here? Start with these'));
   main.appendChild(renderCards({cards:[
@@ -443,7 +438,7 @@ function openDetail(c){
 }
 function doSearch(q){
   q=q.trim().toLowerCase();
-  if(current==='landing'&&q){show('aiedu');document.getElementById('search').value=q;}
+  if(current==='landing'&&q){show('beginner');document.getElementById('search').value=q;}
   document.querySelectorAll('.card').forEach(card=>{card.classList.toggle('hide',!(!q||(card.dataset.text||'').includes(q)));});
 }
 buildNav();show('landing');
