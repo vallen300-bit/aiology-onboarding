@@ -16,6 +16,10 @@ app.use(express.urlencoded({ extended: false, limit: '8kb' }));
 const PORT = process.env.PORT || 3000;
 const USER = process.env.AIOLOGY_USER || '';
 const PASS = process.env.AIOLOGY_PASS || '';
+// Optional multi-user map: AIOLOGY_USERS = {"edita":"pw1","dimitry":"pw2"}
+let USERS = {};
+try { if (process.env.AIOLOGY_USERS) USERS = JSON.parse(process.env.AIOLOGY_USERS); }
+catch (e) { console.warn('WARN: AIOLOGY_USERS is not valid JSON — ignoring.'); }
 const SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
 const MAX_AGE_MS = 1000 * 60 * 60 * 24 * 7; // 7 days
 const COOKIE = 'aiology_session';
@@ -56,10 +60,16 @@ function isAuthed(req) {
 }
 // constant-time credential check (length-safe)
 function checkCreds(u, p) {
-  if (!USER || !PASS) return false;
-  const okU = safeEq(u || '', USER);
-  const okP = safeEq(p || '', PASS);
-  return okU && okP;
+  u = (u || '').toLowerCase();
+  p = p || '';
+  // multi-user map takes precedence
+  if (USERS && Object.keys(USERS).length) {
+    const expected = USERS[u];
+    if (typeof expected === 'string' && safeEq(p, expected)) return true;
+  }
+  // fallback: single AIOLOGY_USER / AIOLOGY_PASS
+  if (USER && PASS && safeEq(u, USER.toLowerCase()) && safeEq(p, PASS)) return true;
+  return false;
 }
 function safeEq(a, b) {
   const ab = Buffer.from(String(a));
