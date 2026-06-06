@@ -72,6 +72,10 @@
   .card .cb{font-size:var(--t-13);color:var(--muted);line-height:1.45;}
   .card .open{margin-top:13px;font-size:var(--t-12);color:var(--accent);font-weight:550;font-family:var(--mono);letter-spacing:0;opacity:0;transition:opacity .14s;}
   .card:hover .open{opacity:1;}
+  /* Brisen Projects card variant: amber desk / black project / blue ask */
+  .card .cdesk{color:#a16207;font-family:var(--mono);font-size:var(--t-11);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:9px;}
+  .card .cproj{font-weight:600;font-size:var(--t-15);color:var(--ink);letter-spacing:-0.01em;line-height:1.3;}
+  .card .cask{margin-top:10px;color:var(--accent);font-family:var(--mono);font-size:var(--t-12);line-height:1.5;letter-spacing:0;}
 
   .hero{border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,#fff,var(--canvas));
         padding:46px 40px 40px;margin-bottom:var(--s4);position:relative;overflow:hidden;}
@@ -368,16 +372,16 @@ const SECTIONS=[
     {t:'Sales',ic:'briefcase',b:'Pipeline & investor relations.',detail:{lead:'Tracks the sales pipeline, MORV units, investor relations, LP updates and buyer prospects. ClickUp MO Residences is the live board.',say:['Sales pipeline','LP update','Buyer prospects']}},
   ]},
 
-  {id:'matters',name:'Brisen Projects',icon:'folder',sub:'Overview of current Brisen projects — cards only, no deep data here.',cards:[
-    {t:'AI Hotel (NVIDIA × MO)',ic:'building',b:'Hotel venture near NVIDIA HQ.',detail:{lead:'Brisen × Mandarin Oriental × NVIDIA — an AI-era hotel concept in the NVIDIA HQ vicinity (Santa Clara).',links:[{label:'Santa Clara site-search starter (Baker project room)',url:'/rooms/santa-clara-site-search.html',kind:'baker'},{label:'Mandarin Oriental US footprint overview (Baker project room)',url:'/rooms/mo-us-footprint.html',kind:'baker'},{label:'Brisen × MOHG × NVIDIA shared starting point (Baker project room)',url:'/rooms/brisen-mohg-nvidia-starting-point.html',kind:'baker'}]}},
-    {t:'Hagenauer',ic:'building',b:'Construction final account.',detail:{lead:'RG7 Baden bei Wien — permit, final account and defect claims (claims-analysis desk).'}},
-    {t:'Mandarin Oriental — Sales',ic:'trending-up',b:'Residences sales.',detail:{lead:'Sales & marketing of the MO Residences Vienna.'}},
-    {t:'Mandarin Oriental — Asset Mgmt',ic:'building',b:'Hotel operations.',detail:{lead:'Asset management of MO Vienna (Brisen-owned, MOHG-operated).'}},
-    {t:'Baden-Baden Projects',ic:'building',b:'BB development.',detail:{lead:'Annaberg (Lilienmatt) and Balgerstrasse (MRCI).'}},
-    {t:'Oskolkov-RG7',ic:'users',b:'AO participation.',detail:{lead:'AO 25% equity in RG7 plus Baden-Baden co-invest.'}},
-    {t:'Cap Ferrat Villa',ic:'building',b:'Villa rental/sale.',detail:{lead:'Riviera asset — rental or sale.'}},
-    {t:'Brisen-AI',ic:'cpu',b:'AI service platform.',detail:{lead:'ClaimsMax, TenderMax, OwnerView.'}},
-    {t:'Tax & Wealth',ic:'dollar',b:'CH/AT/CY/DE + wealth.',detail:{lead:'Russo desks plus the family-wealth overview.'}},
+  {id:'matters',name:'Brisen Projects — What Desk Responsible?',icon:'folder',sub:'Each project, its responsible desk, and how to ask Baker about it.',cards:[
+    {t:'AI Hotel (NVIDIA × MO)',ic:'building',desk:'Origination Desk',ask:'Ask the Origination desk about the NVIDIA AI-hotel project.',detail:{lead:'Brisen × Mandarin Oriental × NVIDIA — an AI-era hotel concept in the NVIDIA HQ vicinity (Santa Clara).',links:[{label:'Santa Clara site-search starter (Baker project room)',url:'/rooms/santa-clara-site-search.html',kind:'baker'},{label:'Mandarin Oriental US footprint overview (Baker project room)',url:'/rooms/mo-us-footprint.html',kind:'baker'},{label:'Brisen × MOHG × NVIDIA shared starting point (Baker project room)',url:'/rooms/brisen-mohg-nvidia-starting-point.html',kind:'baker'}]}},
+    {t:'Hagenauer',ic:'building',desk:'Hagenauer Desk',ask:'Ask the Hagenauer desk for the latest on RG7.',detail:{lead:'RG7 Baden bei Wien — permit, final account and defect claims.'}},
+    {t:'Mandarin Oriental — Sales',ic:'trending-up',desk:'MOVIE Desk',ask:'Ask the MOVIE desk about Residences sales.',detail:{lead:'Sales & marketing of the MO Residences Vienna.'}},
+    {t:'Mandarin Oriental — Asset Mgmt',ic:'building',desk:'MOVIE Desk',ask:'Ask the MOVIE desk about MO Vienna operations.',detail:{lead:'Asset management of MO Vienna (Brisen-owned, MOHG-operated).'}},
+    {t:'Baden-Baden Projects',ic:'building',desk:'Baden-Baden Desk',ask:'Ask the Baden-Baden desk about Annaberg and Balgerstrasse.',detail:{lead:'Annaberg (Lilienmatt) and Balgerstrasse (MRCI).'}},
+    {t:'Oskolkov-RG7',ic:'users',desk:'AO Desk',ask:'Ask the AO desk about the Oskolkov RG7 stake.',detail:{lead:'AO 25% equity in RG7 plus Baden-Baden co-invest.'}},
+    {t:'Cap Ferrat Villa',ic:'building',desk:'Origination Desk',ask:'Ask the Origination desk about the Cap Ferrat villa.',detail:{lead:'Riviera asset — rental or sale.'}},
+    {t:'Brisen-AI',ic:'cpu',desk:'Brisen Desk',ask:'Ask the Brisen desk about the AI products (ClaimsMax, TenderMax, OwnerView).',detail:{lead:'Brisen’s AI service platform: ClaimsMax, TenderMax, OwnerView.'}},
+    {t:'Tax & Wealth',ic:'dollar',desk:'Russo Tax Desks',ask:'Ask the Russo tax desks about CH / AT / CY / DE structuring.',detail:{lead:'Multi-jurisdiction tax (CH/AT/CY/DE) plus the family-wealth overview.'}},
   ]},
 ];
 
@@ -409,14 +413,22 @@ function buildNav(){
   it.onclick=()=>show('overview');nd.appendChild(it);
 }
 function setActiveNav(id){document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('active'));const n=document.getElementById('nav-'+id);if(n)n.classList.add('active');}
-function searchText(c){let s=c.t+' '+c.b+' ';if(c.detail){s+=(c.detail.lead||'')+' '+((c.detail.say||[]).join(' '))+' '+((c.detail.list||[]).join(' '));}return s.toLowerCase();}
+function searchText(c){let s=c.t+' '+(c.b||'')+' '+(c.desk||'')+' '+(c.ask||'')+' ';if(c.detail){s+=(c.detail.lead||'')+' '+((c.detail.say||[]).join(' '))+' '+((c.detail.list||[]).join(' '));}return s.toLowerCase();}
 function renderCards(sec){
   const wrap=el('div','cards');
   sec.cards.forEach(c=>{
     const card=el('button','card');card.type='button';card.dataset.text=searchText(c);
-    card.setAttribute('aria-label',c.t+' — '+c.b);
-    card.appendChild(iconEl('cic',c.ic));
-    card.appendChild(el('div','ct',c.t));card.appendChild(el('div','cb',c.b));card.appendChild(el('div','open','Open →'));
+    if(c.desk){
+      // Brisen Projects variant: amber desk / black project / blue Ask Baker
+      card.setAttribute('aria-label',c.t+' — '+c.desk);
+      card.appendChild(el('div','cdesk',c.desk));
+      card.appendChild(el('div','cproj',c.t));
+      if(c.ask)card.appendChild(el('div','cask',c.ask));
+    }else{
+      card.setAttribute('aria-label',c.t+(c.b?' — '+c.b:''));
+      card.appendChild(iconEl('cic',c.ic));
+      card.appendChild(el('div','ct',c.t));if(c.b)card.appendChild(el('div','cb',c.b));card.appendChild(el('div','open','Open →'));
+    }
     card.onclick=()=>openDetail(c);wrap.appendChild(card);
   });return wrap;
 }
@@ -465,6 +477,8 @@ function openDetail(c){
   document.getElementById('dlgTitle').textContent=c.t;
   const b=document.getElementById('dlgBody');while(b.firstChild)b.removeChild(b.firstChild);
   const d=c.detail||{lead:c.b};
+  if(c.desk){b.appendChild(el('div','dlg-h','Responsible desk'));const dk=el('p',null,c.desk);dk.style.color='#a16207';dk.style.fontWeight='600';dk.style.margin='0 0 14px';b.appendChild(dk);}
+  if(c.ask){b.appendChild(el('div','dlg-h','Ask Baker'));b.appendChild(el('div','say',c.ask));}
   if(c.plain)b.appendChild(el('p','plain-gloss',c.plain));
   if(d.pills){const pw=el('div');d.pills.forEach(p=>pw.appendChild(el('span','pill '+(p.cls||''),p.t)));b.appendChild(pw);}
   if(d.lead)b.appendChild(el('p',null,d.lead));
