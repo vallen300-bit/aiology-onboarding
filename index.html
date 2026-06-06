@@ -122,19 +122,53 @@
   .pill.plan{background:var(--accent-weak);color:var(--accent);}
 
   .hide{display:none!important;}
-  @media(max-width:780px){.app{grid-template-columns:1fr}.sidebar{display:none}.main{padding:24px}.hero{padding:32px 24px}.hero h1{font-size:32px}}
+
+  /* accessible-button resets — nav items + cards are real <button>s */
+  button.navitem{font:inherit;border:none;background:none;width:calc(100% - 16px);text-align:left;}
+  button.navitem:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+  button.card{font:inherit;text-align:left;width:100%;color:inherit;}
+  button.card:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-color:var(--ink);}
+  .search input:focus-visible{outline:none;}
+
+  /* mobile top bar + off-canvas sidebar drawer */
+  .topbar{display:none;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line);
+          position:sticky;top:0;background:var(--bg);z-index:30;}
+  .topbar .mb{background:#fff;border:1px solid var(--line);border-radius:var(--r-sm);width:38px;height:38px;
+              display:grid;place-items:center;cursor:pointer;color:var(--ink);padding:0;}
+  .topbar .mb:hover{border-color:var(--ink);}
+  .topbar .mb svg{width:19px;height:19px;}
+  .topbar .tb-name{font-weight:600;font-size:var(--t-15);letter-spacing:-0.02em;}
+  .topbar .tb-name span{color:var(--accent);}
+  .scrim{display:none;position:fixed;inset:0;background:rgba(11,13,18,.38);z-index:39;}
+  @media(max-width:780px){
+    .app{grid-template-columns:1fr}
+    .topbar{display:flex}
+    .sidebar{position:fixed;left:0;top:0;height:100vh;width:266px;z-index:40;
+             transform:translateX(-100%);transition:transform .2s ease;box-shadow:0 0 44px rgba(11,13,18,.2);}
+    .sidebar.open{transform:none}
+    .scrim.show{display:block}
+    .main{padding:24px}
+    .hero{padding:32px 24px}.hero h1{font-size:32px}
+  }
 </style>
 </head>
 <body>
+<header class="topbar">
+  <button class="mb" id="menuBtn" aria-label="Open navigation menu" aria-controls="sidebar" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+  </button>
+  <div class="tb-name">The<span>Ailogy</span></div>
+</header>
+<div class="scrim" id="scrim"></div>
 <div class="app">
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="mark">A</div>
       <div><div class="name">The<span>Ailogy</span></div><div class="sub">baker · onboarding</div></div>
     </div>
     <div class="search">
       <span class="mag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg></span>
-      <input id="search" type="text" placeholder="Search…" oninput="doSearch(this.value)">
+      <input id="search" type="text" placeholder="Search…" aria-label="Search sections and cards" oninput="doSearch(this.value)">
     </div>
     <div class="navlabel">Learn &amp; use Baker</div>
     <div id="nav"></div>
@@ -233,7 +267,7 @@ const SECTIONS=[
 
   {id:'beginner',name:'Beginner’s Guide',icon:'rocket',sub:'New to Baker? Start here — the essentials, one step at a time.',cards:[
     {t:'What is Baker?',ic:'help',b:'The system in one minute.',detail:{lead:'Sentinel senses; Baker reasons and acts. The CEO Cockpit is the dashboard you look at.',list:['Baker reads Gmail, WhatsApp, meetings, ClickUp and RSS automatically.','It extracts deadlines, drafts replies, and remembers decisions.','You query it in plain English — no dashboard navigation needed.','It works in the background as a monitor and an executor.'],links:[{label:'Open the CEO Cockpit',url:'https://baker-master.onrender.com'}]}},
-    {t:'Connect Baker',ic:'plug',b:'Get it running where you work.',detail:{lead:'Baker reaches your tools through the MCP connection. In Claude Desktop and Cowork it is already live — no setup. In Claude Code, add the config snippet once.',list:['Cowork / Claude Desktop — the Baker MCP is already connected.','Once connected, the 14 Baker tables answer your questions live.','It is read-only on the database — safe to ask anything.']}},
+    {t:'Connect Baker',ic:'plug',b:'Get it running where you work.',detail:{lead:'Baker reaches your tools through the MCP connection. In Claude Desktop and Cowork it is already live — no setup. In Claude Code, add the config snippet once.',list:['Cowork / Claude Desktop — the Baker MCP is already connected.','Once connected, the 14 Baker tables answer your questions live.','Read-only on the database — Baker reads and analyses, never writes or deletes.','Outbound emails are always drafted for your approval, never auto-sent.']}},
     {t:'Ask your first question',ic:'message',b:'Query in plain English.',detail:{lead:'Type a question; Baker answers from the live database in seconds. No menus, no navigation.',say:['What’s due this week?','Show me the MO Vienna deadline','List VIP contacts','What did Baker do in the last 24 hours?']}},
     {t:'Run a Scan',ic:'scan',b:'Sweep a matter.',detail:{lead:'Ask Baker to scan a matter and report its current position — it pulls transcripts, emails and the record into one briefing.',say:['Prepare a deep analysis of the [meeting] about [matter]. Include full summary, every commitment, decision and action item with owner, key quotes, and risks.']}},
     {t:'Store a decision',ic:'archive',b:'Make Baker remember.',detail:{lead:'When you reach a conclusion, tell Baker to store it. It persists across sessions — next time you ask about the matter, Baker already knows.',say:['Store this decision in Baker: [your conclusion]']}},
@@ -253,7 +287,7 @@ const SECTIONS=[
   {id:'aiedu',name:'AI Education',icon:'graduation',sub:'Learn how an agentic AI system is built — and the novel ways to use it.',cards:[
     {t:'AI Architecture 101',ic:'layers',b:'How an agentic system is structured.',detail:{lead:'Baker is built from five building blocks. Understanding them makes every other section click into place.',list:['Model — the reasoning engine (Claude Opus).','Tools (MCP) — hands that reach Gmail, ClickUp, the database.','Memory — what Baker remembers across sessions.','Orchestration — how multiple agents divide work.','Harness — scaffolding that turns a raw model into a reliable worker.'],links:[{label:'Baker Architecture v5 diagram',url:'https://vallen300-bit.github.io/brisen-dashboards/Baker_Architecture_v5.html'}]}},
     {t:'Agent Engineering',ic:'cpu',b:'How agents are designed & prompted.',detail:{lead:'An agent is a scoped AI role with its own instructions, tools and memory. Engineering them well is the difference between a helpful assistant and a reliable system.',list:['Each agent has a system prompt defining its job.','Gates (review steps) catch mistakes before they ship.','Hand-offs pass work between agents on a shared bus.','Golden rule: use AI for judgment, not deterministic plumbing.']}},
-    {t:'MCP explained',ic:'plug',b:'The protocol that gives agents tools.',detail:{lead:'MCP (Model Context Protocol) is what lets Baker reach outside its own head — into your Gmail, ClickUp, calendar, and the 14 Baker database tables.',list:['Without MCP, the model can only talk.','With MCP, it can act — read mail, query the DB, post tasks.','The Baker MCP is live in Cowork and Claude Desktop now.','It is read-only on the DB — safe to ask anything.'],say:['Show me upcoming deadlines','What is Baker’s status?','List VIP contacts']}},
+    {t:'MCP explained',ic:'plug',b:'The protocol that gives agents tools.',detail:{lead:'MCP (Model Context Protocol) is what lets Baker reach outside its own head — into your Gmail, ClickUp, calendar, and the 14 Baker database tables.',list:['Without MCP, the model can only talk.','With MCP, it can act — read mail, query the DB, post tasks.','The Baker MCP is live in Cowork and Claude Desktop now.','Read-only on the DB — it reads and analyses; it cannot change or delete data.','Some matter detail is Director-only; sends always draft for approval.'],say:['Show me upcoming deadlines','What is Baker’s status?','List VIP contacts']}},
     {t:'Harnessing Agents',ic:'sliders',b:'The 7-layer harness model.',detail:{lead:'A "harness" is everything around the model that makes a fleet of agents stay aligned and reliable — context, tools, memory, gates, and the coordination bus.',list:['Layers 1–6: prompt, tools, memory, context, gates, evaluation.','Layer 7 (Baker-specific): the bus where agents coordinate.','New agents are installed to standard, not hand-rolled.','This is why the fleet behaves consistently.']}},
     {t:'RAG & Ingestion',ic:'database',b:'How Baker reads & remembers.',detail:{lead:'RAG (retrieval-augmented generation) is how Baker answers from your documents, not just the model’s training. Content flows in, gets understood, and becomes searchable.',list:['Extract — reads PDFs, scans, images, tables into text.','Classify — sorts invoice vs contract vs plan vs letter.','Enrich → Decide → Draft → Store — the 5-step pipeline.','Sources: Gmail, Fireflies, WhatsApp, ClickUp, RSS.'],say:['Save a Word file to Dropbox Baker-Feed/ — Baker ingests it automatically.']}},
     {t:'Creating Project Rooms',ic:'folder-plus',b:'Spin up a focused workspace.',detail:{lead:'A project room scopes agents to one topic so they aren’t distracted by the whole portfolio. Think of it as a dedicated desk for one job.',list:['Mount a folder in Cowork to start a room.','The folder’s instructions route to the right role.','Keeps context tight — faster, cheaper, sharper.']}},
@@ -297,7 +331,7 @@ const SECTIONS=[
   ]},
 
   {id:'caps',name:'Capabilities & Tools',icon:'grid',sub:'What Baker can reach.',cards:[
-    {t:'MCP tool catalogue',ic:'plug',b:'All connected tools.',detail:{lead:'The MCP server gives every Claude session live access to Baker’s 14 database tables plus the connected app tools — read-only on the DB, safe to query freely.',list:['Baker DB — deadlines, VIP contacts, emails, actions, watermarks…','Gmail, Calendar, ClickUp, Slack, Fireflies, Dropbox, DeepL.','Live in Cowork + Claude Desktop. (Claude Code needs its own config.)'],say:['What’s due this week?','Cross-check my Todoist deadlines against Baker’s deadline table for conflicts.']}},
+    {t:'MCP tool catalogue',ic:'plug',b:'All connected tools.',detail:{lead:'The MCP server gives every Claude session live access to Baker’s 14 database tables plus the connected app tools — read-only on the DB (no writes or deletes). Some matter data is Director-only, and any outbound send is drafted for approval first.',list:['Baker DB — deadlines, VIP contacts, emails, actions, watermarks…','Gmail, Calendar, ClickUp, Slack, Fireflies, Dropbox, DeepL.','Live in Cowork + Claude Desktop. (Claude Code needs its own config.)'],say:['What’s due this week?','Cross-check my Todoist deadlines against Baker’s deadline table for conflicts.']}},
     {t:'Skills library',ic:'zap',b:'~187 installed skills.',detail:{lead:'~187 skills (80 UX/ops + 91 designer) in a shared library, loaded on demand when a trigger phrase matches. The fleet reaches them lazily.',list:['9 designer categories: research, strategy, design-systems, ui-design, interaction, prototyping, visual-critique, ops, toolkit.']}},
     {t:'Scheduled tasks',ic:'clock',b:'Cron-style automations.',detail:{lead:'Recurring jobs that run and report on a schedule — e.g. a Monday-morning audit or a periodic poll. Two paths feed deadlines: hard deadlines Baker extracts automatically from your inbox; soft tasks you (or an agent) add.',links:[{label:'Example scheduled trigger',url:'https://claude.ai/code/scheduled/trig_019aFxic5cTK6aWxgtCBoCAE'}]}},
     {t:'Web / X search',ic:'globe',b:'Live external lookups.',detail:{lead:'For any web link, paste it in chat — Baker auto-picks the right tool. Grok handles X/Twitter; Perplexity gives cited web synthesis; Gemma runs free local research.',say:['Ask Grok what’s hot on X about [topic]','Research [topic] with citations']}},
@@ -364,14 +398,14 @@ let current='landing';
 function buildNav(){
   const nav=document.getElementById('nav');
   SECTIONS.forEach(s=>{
-    const it=el('div','navitem'+(s.id===current?' active':''));it.id='nav-'+s.id;
+    const it=el('button','navitem'+(s.id===current?' active':''));it.id='nav-'+s.id;it.type='button';
     it.appendChild(iconEl('ic',s.icon));it.appendChild(el('div',null,s.name));
     if(s.id==='matters')it.appendChild(el('span','badge','16'));
     if(s.id==='workflows')it.appendChild(el('span','badge','11'));
     it.onclick=()=>show(s.id);nav.appendChild(it);
   });
   const nd=document.getElementById('navDir');
-  const it=el('div','navitem'+(current==='overview'?' active':''));it.id='nav-overview';
+  const it=el('button','navitem'+(current==='overview'?' active':''));it.id='nav-overview';it.type='button';
   it.appendChild(iconEl('ic',DIRECTOR.icon));it.appendChild(el('div',null,DIRECTOR.name));
   it.onclick=()=>show('overview');nd.appendChild(it);
 }
@@ -380,14 +414,15 @@ function searchText(c){let s=c.t+' '+c.b+' ';if(c.detail){s+=(c.detail.lead||'')
 function renderCards(sec){
   const wrap=el('div','cards');
   sec.cards.forEach(c=>{
-    const card=el('div','card');card.dataset.text=searchText(c);
+    const card=el('button','card');card.type='button';card.dataset.text=searchText(c);
+    card.setAttribute('aria-label',c.t+' — '+c.b);
     card.appendChild(iconEl('cic',c.ic));
     card.appendChild(el('div','ct',c.t));card.appendChild(el('div','cb',c.b));card.appendChild(el('div','open','Open →'));
     card.onclick=()=>openDetail(c);wrap.appendChild(card);
   });return wrap;
 }
 function show(id){
-  current=id;setActiveNav(id);
+  current=id;setActiveNav(id);closeMenu();window.scrollTo(0,0);
   const main=document.getElementById('main');while(main.firstChild)main.removeChild(main.firstChild);
   document.getElementById('search').value='';
   if(id==='landing'){renderLanding(main);return;}
@@ -401,7 +436,7 @@ function renderLanding(main){
   const hero=el('div','hero');const hin=el('div','hero-in');
   hin.appendChild(el('div','kick','Baker · Onboarding'));
   hin.appendChild(el('h1','','Put Baker to work.'));
-  hin.appendChild(el('p','','Your guide to what Baker is, what it can do, and how to use it. Learn from the sections on the left — then launch Baker directly.'));
+  hin.appendChild(el('p','','Your guide to what Baker is, what it can do, and how to use it. Work through the sections, then launch Baker directly.'));
   const ctas=el('div','ctas');
   const b1=document.createElement('a');b1.className='btn primary';b1.href='https://baker-master.onrender.com';b1.target='_blank';
   b1.appendChild(el('span',null,'Open Baker Dashboard'));b1.appendChild(iconEl('ic','external'));
@@ -416,10 +451,12 @@ function renderLanding(main){
   ]}));
   const cl=el('div','checklist');
   const steps=['Connect Baker in Claude Desktop','Ask Baker your first question','Run a Scan on a matter','Store your first decision','Explore the Skills library'];
+  const saved=loadChecklist();
   steps.forEach((s,i)=>{
-    const row=el('div','ck');const cb=el('input');cb.type='checkbox';
-    const n=el('span','n',String(i+1).padStart(2,'0'));const lab=el('label',null,s);lab.style.flex='1';
-    cb.onchange=()=>row.classList.toggle('done',cb.checked);
+    const row=el('div','ck');const cb=el('input');cb.type='checkbox';cb.id='ck-'+i;
+    const n=el('span','n',String(i+1).padStart(2,'0'));const lab=el('label',null,s);lab.style.flex='1';lab.htmlFor='ck-'+i;
+    cb.checked=!!saved[i];if(cb.checked)row.classList.add('done');
+    cb.onchange=()=>{row.classList.toggle('done',cb.checked);saved[i]=cb.checked;saveChecklist(saved);};
     row.appendChild(cb);row.appendChild(n);row.appendChild(lab);cl.appendChild(row);
   });
   main.appendChild(el('div','subhead',''));main.appendChild(cl);
@@ -441,6 +478,18 @@ function doSearch(q){
   if(current==='landing'&&q){show('beginner');document.getElementById('search').value=q;}
   document.querySelectorAll('.card').forEach(card=>{card.classList.toggle('hide',!(!q||(card.dataset.text||'').includes(q)));});
 }
+// mobile drawer
+const sidebarEl=document.getElementById('sidebar'),scrimEl=document.getElementById('scrim'),menuBtn=document.getElementById('menuBtn');
+function openMenu(){sidebarEl.classList.add('open');scrimEl.classList.add('show');menuBtn.setAttribute('aria-expanded','true');}
+function closeMenu(){sidebarEl.classList.remove('open');scrimEl.classList.remove('show');menuBtn.setAttribute('aria-expanded','false');}
+menuBtn.onclick=()=>sidebarEl.classList.contains('open')?closeMenu():openMenu();
+scrimEl.onclick=closeMenu;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
+
+// checklist persistence
+function loadChecklist(){try{return JSON.parse(localStorage.getItem('theailogy.checklist')||'{}');}catch(e){return {};}}
+function saveChecklist(o){try{localStorage.setItem('theailogy.checklist',JSON.stringify(o));}catch(e){}}
+
 buildNav();show('landing');
 </script>
 </body>
