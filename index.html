@@ -6,10 +6,11 @@
 <title>TheAilogy — Baker Onboarding</title>
 <style>
   :root{
-    --bg:#ffffff; --canvas:#fbfbfc; --panel:#ffffff;
-    --ink:#0b0d12; --ink-2:#383d47; --muted:#5b616e;
-    --line:#e9eaed; --line-2:#f1f2f4; --hover:#f6f7f9;
-    --accent:#1d4ed8; --accent-weak:#eef2fe;
+    --bg:#ffffff; --canvas:#f7f6f3; --panel:#ffffff;
+    --ink:#151515; --ink-2:#34312d; --muted:#625e58;
+    --line:#e4e0d8; --line-2:#f0ede8; --hover:#f4f1ec;
+    --accent:#ff4b1f; --accent-weak:#fff0ea; --blue:#1d4ed8; --blue-weak:#eef2fe;
+    --ok:#76b900; --ok-weak:#eef8de; --warn:#d89a20; --warn-weak:#fbefd8;
     --black:#0b0d12;
     --t-11:11px; --t-12:12px; --t-13:13px; --t-14:14px; --t-15:15px; --t-19:19px; --t-24:24px; --t-32:32px; --t-40:40px;
     --lh-tight:1.15; --lh:1.55;
@@ -21,7 +22,7 @@
   *{box-sizing:border-box}
   html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
   body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);
-       line-height:var(--lh);font-size:var(--t-15);letter-spacing:-0.005em;}
+       line-height:var(--lh);font-size:var(--t-15);letter-spacing:0;}
   svg{display:block}
   .app{display:grid;grid-template-columns:252px 1fr;min-height:100vh;}
 
@@ -29,9 +30,9 @@
            position:sticky;top:0;height:100vh;overflow-y:auto;}
   .brand{padding:22px 20px 14px;display:flex;align-items:center;gap:11px;}
   .brand .mark{width:30px;height:30px;border-radius:7px;background:var(--ink);color:#fff;
-               display:grid;place-items:center;font-weight:650;font-size:15px;letter-spacing:-0.03em;}
-  .brand .name{font-weight:600;font-size:var(--t-15);letter-spacing:-0.02em;}
-  .brand .name span{color:var(--accent);}
+               display:grid;place-items:center;font-weight:650;font-size:15px;letter-spacing:0;}
+  .brand .name{font-weight:600;font-size:var(--t-15);letter-spacing:0;}
+  .brand .name span{color:var(--blue);}
   .brand .sub{font-size:var(--t-11);color:var(--muted);margin-top:1px;font-family:var(--mono);letter-spacing:0;}
   .search{margin:4px 16px 8px;position:relative;}
   .search input{width:100%;padding:8px 10px 8px 31px;border:1px solid var(--line);border-radius:var(--r-sm);
@@ -42,7 +43,7 @@
   .navlabel{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);
             padding:14px 20px 6px;font-weight:600;font-family:var(--mono);}
   .navitem{display:flex;align-items:center;gap:11px;padding:7px 16px 7px 17px;margin:1px 8px;border-radius:var(--r-sm);
-           cursor:pointer;font-size:var(--t-14);color:var(--ink-2);position:relative;letter-spacing:-0.01em;}
+           cursor:pointer;font-size:var(--t-14);color:var(--ink-2);position:relative;letter-spacing:0;}
   .navitem:hover{background:var(--hover);color:var(--ink);}
   .navitem .ic{width:18px;height:18px;color:var(--muted);flex:none;}
   .navitem .ic svg{width:18px;height:18px;stroke-width:1.7;}
@@ -57,9 +58,9 @@
   .sb-foot{padding:10px 20px 18px;font-size:var(--t-11);color:var(--muted);display:flex;align-items:center;gap:7px;font-family:var(--mono);}
   .dot{width:6px;height:6px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 3px #16a34a22;}
 
-  .main{padding:40px 44px 72px;max-width:1040px;}
+  .main{padding:40px 44px 72px;max-width:1120px;}
   .kicker{font-size:var(--t-11);color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.14em;font-family:var(--mono);}
-  h1.sec{font-size:var(--t-32);line-height:var(--lh-tight);margin:0 0 8px;letter-spacing:-0.03em;font-weight:650;}
+  h1.sec{font-size:var(--t-32);line-height:var(--lh-tight);margin:0 0 8px;letter-spacing:0;font-weight:650;}
   .sec-sub{color:var(--muted);font-size:var(--t-15);margin-bottom:var(--s4);max-width:62ch;}
   .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:14px;}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 16px 15px;
@@ -68,26 +69,45 @@
   .card .cic{width:20px;height:20px;color:var(--ink-2);margin-bottom:11px;}
   .card .cic svg{width:20px;height:20px;stroke-width:1.6;}
   .card:hover .cic{color:var(--accent);}
-  .card .ct{font-weight:600;font-size:var(--t-14);margin-bottom:4px;line-height:1.3;letter-spacing:-0.01em;}
+  .card .ct{font-weight:600;font-size:var(--t-14);margin-bottom:4px;line-height:1.3;letter-spacing:0;}
   .card .cb{font-size:var(--t-13);color:var(--muted);line-height:1.45;}
   .card .open{margin-top:13px;font-size:var(--t-12);color:var(--accent);font-weight:550;font-family:var(--mono);letter-spacing:0;opacity:0;transition:opacity .14s;}
   .card:hover .open{opacity:1;}
   /* Brisen Projects card variant: amber desk / black project / blue ask */
   .card .cdesk{color:#a16207;font-family:var(--mono);font-size:var(--t-11);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:9px;}
-  .card .cproj{font-weight:600;font-size:var(--t-15);color:var(--ink);letter-spacing:-0.01em;line-height:1.3;}
+  .card .cproj{font-weight:600;font-size:var(--t-15);color:var(--ink);letter-spacing:0;line-height:1.3;}
   .card .cask{margin-top:10px;color:var(--accent);font-family:var(--mono);font-size:var(--t-12);line-height:1.5;letter-spacing:0;}
 
-  .hero{border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,#fff,var(--canvas));
-        padding:46px 40px 40px;margin-bottom:var(--s4);position:relative;overflow:hidden;}
-  .hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--line) 1px,transparent 1px);
-        background-size:22px 22px;opacity:.5;mask-image:linear-gradient(120deg,transparent 55%,#000);}
+  .hero{margin-bottom:var(--s4);position:relative;}
   .hero-in{position:relative;}
-  .hero .kick{font-family:var(--mono);font-size:var(--t-11);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
-  .hero h1{margin:0 0 12px;font-size:var(--t-40);line-height:1.08;letter-spacing:-0.035em;font-weight:680;max-width:16ch;}
-  .hero p{margin:0 0 26px;color:var(--ink-2);font-size:var(--t-19);max-width:54ch;letter-spacing:-0.01em;line-height:1.5;}
+  .hero-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.78fr);gap:72px;align-items:start;padding:8px 0 64px;}
+  .hero .kick{font-family:var(--mono);font-size:var(--t-11);letter-spacing:0;text-transform:uppercase;color:#3d6f00;margin-bottom:16px;}
+  .hero h1{margin:0;font-size:44px;line-height:1.08;letter-spacing:0;font-weight:680;max-width:16ch;}
+  .hero-copy{display:grid;gap:18px;color:var(--ink-2);font-size:18px;line-height:1.55;}
+  .hero-copy p{margin:0}
+  .map-title{margin:0 0 30px;text-align:center;font-size:24px;line-height:1.15;font-weight:650;}
+  .operating-map{display:grid;grid-template-columns:minmax(190px,.72fr) minmax(390px,1.45fr) minmax(190px,.72fr);gap:30px;align-items:center;margin-bottom:38px;}
+  .issue-list{display:grid;gap:28px}
+  .issue{display:grid;gap:7px;min-height:96px;align-content:center}
+  .issue.left{text-align:right}
+  .issue h3{margin:0;font-size:20px;line-height:1.15;font-weight:650}
+  .issue p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+  .flow-panel{min-height:430px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,#fff,#fbfaf8);box-shadow:0 18px 52px rgba(21,21,21,.07);padding:40px;display:grid;place-items:center}
+  .flow-grid{width:min(420px,100%);display:grid;grid-template-columns:repeat(3,1fr);gap:32px 44px;align-items:center;justify-items:center}
+  .flow-node{position:relative;width:60px;height:60px;border:1px solid var(--line);border-radius:14px;background:#fff;display:grid;place-items:center;color:var(--ink);box-shadow:0 14px 26px rgba(21,21,21,.06)}
+  .flow-node .cic{width:26px;height:26px;margin:0;color:currentColor}
+  .flow-node.main{grid-column:2;width:150px;height:100px;border-radius:16px}
+  .flow-node.main::before{content:"";position:absolute;top:19px;width:42px;height:42px;border:3px solid var(--accent);border-left-color:transparent;border-radius:50%}
+  .flow-node.main span{position:absolute;left:0;right:0;bottom:15px;text-align:center;font-size:12px;font-weight:650;white-space:nowrap}
+  .connector{position:absolute;right:-44px;width:43px;border-top:1px dashed rgba(255,75,31,.72)}
+  .connector.down{right:auto;bottom:-32px;width:0;height:31px;border-top:0;border-left:1px dashed rgba(255,75,31,.72)}
+  .metric-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-bottom:var(--s4)}
+  .metric-card{min-height:112px;border:1px solid var(--line);border-radius:14px;background:#fff;padding:20px 22px;text-align:center;box-shadow:0 10px 30px rgba(21,21,21,.04)}
+  .metric-card b{display:block;margin-bottom:7px;color:var(--accent);font-size:30px;line-height:1;font-weight:800}
+  .metric-card span{color:#4a4641;font-size:14px;line-height:1.35}
   .ctas{display:flex;gap:10px;flex-wrap:wrap;}
   .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:var(--r-sm);font-size:var(--t-14);
-       font-weight:550;cursor:pointer;border:1px solid transparent;font-family:inherit;text-decoration:none;letter-spacing:-0.01em;transition:.14s;}
+       font-weight:550;cursor:pointer;border:1px solid transparent;font-family:inherit;text-decoration:none;letter-spacing:0;transition:.14s;}
   .btn .ic{width:15px;height:15px;}.btn .ic svg{width:15px;height:15px;stroke-width:1.8;}
   .btn.primary{background:var(--black);color:#fff;}
   .btn.primary:hover{background:#23262e;}
@@ -106,7 +126,7 @@
   dialog::backdrop{background:rgba(11,13,18,.38);backdrop-filter:saturate(120%) blur(2px);}
   .dlg-head{padding:20px 24px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:13px;}
   .dlg-head .cic{width:22px;height:22px;color:var(--ink);}.dlg-head .cic svg{width:22px;height:22px;stroke-width:1.6;}
-  .dlg-head h2{margin:0;font-size:var(--t-19);letter-spacing:-0.02em;font-weight:620;}
+  .dlg-head h2{margin:0;font-size:var(--t-19);letter-spacing:0;font-weight:620;}
   .dlg-head .x{margin-left:auto;background:none;border:none;cursor:pointer;color:var(--muted);width:22px;height:22px;padding:0;}
   .dlg-head .x:hover{color:var(--ink);}
   .dlg-body{padding:20px 24px 26px;font-size:var(--t-14);max-height:68vh;overflow-y:auto;line-height:1.55;}
@@ -128,7 +148,7 @@
   .lnk-col{display:flex;flex-direction:column;align-items:flex-start;gap:5px;margin-bottom:4px;}
   .pill{display:inline-flex;align-items:center;gap:5px;background:var(--line-2);color:var(--muted);font-size:var(--t-11);font-weight:600;
         padding:3px 9px;border-radius:6px;margin:0 6px 8px 0;font-family:var(--mono);letter-spacing:.02em;}
-  .pill.ok{background:#e7f6ec;color:#15803d;}
+  .pill.ok{background:var(--ok-weak);color:#3d6f00;}
   .pill.plan{background:var(--accent-weak);color:var(--accent);}
 
   .hide{display:none!important;}
@@ -147,8 +167,8 @@
               display:grid;place-items:center;cursor:pointer;color:var(--ink);padding:0;}
   .topbar .mb:hover{border-color:var(--ink);}
   .topbar .mb svg{width:19px;height:19px;}
-  .topbar .tb-name{font-weight:600;font-size:var(--t-15);letter-spacing:-0.02em;}
-  .topbar .tb-name span{color:var(--accent);}
+  .topbar .tb-name{font-weight:600;font-size:var(--t-15);letter-spacing:0;}
+  .topbar .tb-name span{color:var(--blue);}
   .scrim{display:none;position:fixed;inset:0;background:rgba(11,13,18,.38);z-index:39;}
   @media(max-width:780px){
     .app{grid-template-columns:1fr}
@@ -158,7 +178,25 @@
     .sidebar.open{transform:none}
     .scrim.show{display:block}
     .main{padding:24px}
-    .hero{padding:32px 24px}.hero h1{font-size:32px}
+    .hero-split{grid-template-columns:1fr;gap:24px;padding-bottom:36px}
+    .hero h1{font-size:32px}
+    .hero-copy{font-size:15px}
+    .map-title{text-align:left;font-size:21px}
+    .operating-map{grid-template-columns:1fr;gap:20px}
+    .issue-list{gap:18px}
+    .issue,.issue.left{text-align:left;min-height:auto}
+    .flow-panel{min-height:auto;padding:24px 16px}
+    .flow-grid{gap:22px 20px}
+    .flow-node{width:52px;height:52px}
+    .flow-node.main{width:118px;height:88px}
+    .metric-row{grid-template-columns:1fr}
+  }
+  @media(min-width:781px) and (max-width:1180px){
+    .hero-split{gap:34px}
+    .operating-map{grid-template-columns:1fr}
+    .issue-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .issue,.issue.left{text-align:left;min-height:auto}
+    .metric-row{grid-template-columns:repeat(2,minmax(0,1fr))}
   }
 </style>
 </head>
@@ -445,9 +483,63 @@ function show(id){
 }
 function renderLanding(main){
   const hero=el('div','hero');const hin=el('div','hero-in');
-  hin.appendChild(el('div','kick','Baker · Onboarding'));
-  hin.appendChild(el('h1','','Put Baker to work.'));
-  hin.appendChild(el('p','','Your guide to what Baker is, what it can do, and how to use it. Work through the sections, then launch Baker directly.'));
+  const split=el('div','hero-split');
+  const left=el('div');
+  left.appendChild(el('div','kick','TheAilogy project room'));
+  left.appendChild(el('h1','','Learning Baker is never as simple as a help page.'));
+  const right=el('div','hero-copy');
+  right.appendChild(el('p',null,'Most onboarding sites become shelves of cards and links. At first, that works: the team can search, click, and read.'));
+  right.appendChild(el('p',null,'But Baker is live infrastructure. The page has to teach the system, show where work happens, and turn curiosity into the next useful action.'));
+  right.appendChild(el('p',null,'The job is not to explain every feature. The job is to get a new user from confusion to one confident Baker action.'));
+  split.appendChild(left);split.appendChild(right);hin.appendChild(split);
+
+  hin.appendChild(el('h2','map-title','The hidden costs of weak AI onboarding'));
+
+  const map=el('div','operating-map');
+  const leftIssues=el('div','issue-list');
+  [
+    ['Tool confusion','Users do not know whether to ask Baker, Cowork, Claude, or a desk.'],
+    ['Memory gap','Decisions stay in chat instead of becoming reusable Baker memory.'],
+    ['Workflow drift','Users read instructions but never reach a real first action.']
+  ].forEach(([h,p])=>{const item=el('article','issue left');item.appendChild(el('h3',null,h));item.appendChild(el('p',null,p));leftIssues.appendChild(item);});
+
+  const panel=el('div','flow-panel');
+  const grid=el('div','flow-grid');
+  [
+    ['book','right'],['map','right'],['help','down'],
+    ['message','right'],['main',''],['workflow','down'],
+    ['clock','right'],['check','right'],['shield','']
+  ].forEach(([ic,conn])=>{
+    const node=el('div','flow-node'+(ic==='main'?' main':''));
+    if(ic==='main'){
+      node.appendChild(el('span',null,'TheAilogy'));
+    }else{
+      node.appendChild(iconEl('cic',ic));
+    }
+    if(conn==='right')node.appendChild(el('span','connector'));
+    if(conn==='down')node.appendChild(el('span','connector down'));
+    grid.appendChild(node);
+  });
+  panel.appendChild(grid);
+
+  const rightIssues=el('div','issue-list');
+  [
+    ['Too many links','Education, tools, project rooms, and workflows compete equally.'],
+    ['Manual upkeep','Cards need a visible structure so additions stay coherent.'],
+    ['No next move','A beautiful page still fails if it does not guide action.']
+  ].forEach(([h,p])=>{const item=el('article','issue');item.appendChild(el('h3',null,h));item.appendChild(el('p',null,p));rightIssues.appendChild(item);});
+
+  map.appendChild(leftIssues);map.appendChild(panel);map.appendChild(rightIssues);hin.appendChild(map);
+
+  const metrics=el('div','metric-row');
+  [
+    ['9','project rooms need fast entry.'],
+    ['11','Brisen AI workflows should be scannable.'],
+    ['187','skills need one clear mental model.'],
+    ['1','first action: ask Baker something useful.']
+  ].forEach(([n,t])=>{const card=el('article','metric-card');card.appendChild(el('b',null,n));card.appendChild(el('span',null,t));metrics.appendChild(card);});
+  hin.appendChild(metrics);
+
   const ctas=el('div','ctas');
   const b1=document.createElement('a');b1.className='btn primary';b1.href='https://baker-master.onrender.com';b1.target='_blank';
   b1.appendChild(el('span',null,'Open Baker Dashboard'));b1.appendChild(iconEl('ic','external'));
